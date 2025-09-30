@@ -565,15 +565,39 @@
         <h2>Hi, I'm Srdjan Strbanovic 👋</h2>
         <div class="split-content">
           <div>
-            <p class="subtitle" style="margin-bottom: 1rem">
-              Transformational Technology Leader - NYC Tri-State Area
+            <p class="subtitle" style="margin-bottom: 1rem; font-size: 1.4rem; color: var(--secondary);">
+              🚀 Building the future, one architecture at a time
             </p>
-            <div class="rules-container" style="max-width: 900px">
-              <div class="list-item">SVP Architecture @ First Advantage</div>
-              <div class="list-item">Co-Founder/CTO @ KlinchIt.app</div>
-              <div class="list-item">Chief Architect @ Lifion by ADP</div>
-              <div class="list-item">Principal Architect @ ThoughtWorks</div>
-              <div class="list-item">CTO @ Cignium</div>
+            <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+              <div style="margin-bottom: 1.5rem;">
+                <div style="font-size: 1.3rem; color: var(--warning); margin-bottom: 0.5rem;">📍 NYC Tri-State Area</div>
+                <div style="font-size: 1.1rem; opacity: 0.9;">Where I turn coffee into distributed systems ☕→🏗️</div>
+              </div>
+
+              <div style="font-size: 1.3rem; color: var(--success); margin-bottom: 0.8rem;">💼 Career Highlights:</div>
+              <div class="rules-container" style="max-width: 900px; gap: 0.8rem;">
+                <div class="list-item" style="font-size: 1.2rem;">
+                  <span style="color: var(--primary);">🏢</span> SVP Architecture @ First Advantage
+                </div>
+                <div class="list-item" style="font-size: 1.2rem;">
+                  <span style="color: var(--secondary);">🚀</span> Co-Founder/CTO @ KlinchIt.app
+                </div>
+                <div class="list-item" style="font-size: 1.2rem;">
+                  <span style="color: var(--success);">⚡</span> Chief Architect @ Lifion by ADP
+                </div>
+                <div class="list-item" style="font-size: 1.2rem;">
+                  <span style="color: var(--warning);">🎯</span> Principal Architect @ ThoughtWorks
+                </div>
+                <div class="list-item" style="font-size: 1.2rem;">
+                  <span style="color: var(--danger);">💡</span> CTO @ Cignium
+                </div>
+              </div>
+
+              <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(99, 102, 241, 0.1); border-radius: 0.5rem; border-left: 4px solid var(--primary);">
+                <div style="font-size: 1.1rem; opacity: 0.95;">
+                  <strong style="color: var(--primary);">Fun fact:</strong> I've debugged code in 3 time zones simultaneously 🌍
+                </div>
+              </div>
             </div>
           </div>
           <div>
@@ -582,16 +606,29 @@
               height="200"
               viewBox="0 0 200 200"
               aria-label="Srdjan avatar"
-              style="margin-bottom: 1rem"
+              style="margin-bottom: 1rem;"
             >
+              <defs>
+                <linearGradient id="avatar-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:var(--primary);stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:var(--secondary);stop-opacity:1" />
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
               <circle
                 cx="100"
                 cy="100"
                 r="95"
-                fill="var(--primary)"
-                opacity="0.85"
-              >
-              </circle>
+                fill="url(#avatar-gradient)"
+                opacity="0.95"
+                filter="url(#glow)"
+              />
               <text
                 x="100"
                 y="118"
@@ -602,31 +639,52 @@
               >
                 SS
               </text>
+              <circle cx="100" cy="100" r="95" fill="none" stroke="var(--warning)" stroke-width="3" stroke-dasharray="10 5" opacity="0.5">
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  from="0 100 100"
+                  to="360 100 100"
+                  dur="10s"
+                  repeatCount="indefinite"
+                />
+              </circle>
             </svg>
-            <div class="prompt-links">
-              <a href="https://srdjan.github.io/" target="_blank" rel="noopener"
-              >Website</a>
+            <div class="prompt-links" style="justify-content: center;">
+              <a
+                href="https://srdjan.github.io/"
+                target="_blank"
+                rel="noopener"
+                style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2)); border-color: var(--primary);"
+              >🌐 Website</a>
               <a href="https://github.com/srdjan" target="_blank" rel="noopener"
-              >GitHub</a>
+                style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2)); border-color: var(--primary);"
+              >💻 GitHub</a>
               <a
                 href="https://www.linkedin.com/in/ssrdjan/"
                 target="_blank"
                 rel="noopener"
-              >LinkedIn</a>
+                style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2)); border-color: var(--primary);"
+              >🔗 LinkedIn</a>
+            </div>
+            <div class="prompt-links" style="margin-top: 0.75rem; justify-content: center;">
               <a href="https://x.com/djidja8" target="_blank" rel="noopener"
-              >X</a>
+                style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2)); border-color: var(--secondary);"
+              >🐦 X/Twitter</a>
               <a
                 href="https://blogo.timek.deno.net"
                 target="_blank"
                 rel="noopener"
-              >Blog</a>
+                style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2)); border-color: var(--secondary);"
+              >✍️ Blog</a>
             </div>
-            <div class="prompt-links" style="margin-top: 0.75rem">
+            <div class="prompt-links" style="margin-top: 0.75rem; justify-content: center;">
               <img
                 alt="QR to srdjan.github.io"
                 width="120"
                 height="120"
                 src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fsrdjan.github.io%2F"
+                style="box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);"
               />
             </div>
           </div>

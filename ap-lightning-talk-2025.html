@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teaching Your AI Agent the Art of Knowing Nothing (Sometimes)</title>
+  <meta name="prompt-url" content="">
+
   <style>
     * {
       margin: 0;
@@ -295,6 +297,80 @@
       border-color: var(--danger);
       background: rgba(239, 68, 68, 0.1);
     }
+
+
+    /* Accessibility helpers */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    /* Help overlay */
+    #help-overlay { position: fixed; inset: 0; display: none; place-items: center;
+      background: rgba(2,6,23,0.6); backdrop-filter: blur(8px) saturate(120%);
+      z-index: 200; padding: 2rem; }
+    #help-overlay.open { display: grid; }
+    #help-overlay .panel { max-width: 900px; width: min(90vw, 900px);
+      background: color-mix(in srgb, var(--bg) 80%, white);
+      border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
+      border-radius: 1rem; padding: 1.5rem 2rem; }
+    #help-overlay h3 { margin-bottom: 1rem; color: var(--primary); }
+    #help-overlay .grid { display: grid; gap: 0.5rem; grid-template-columns: 1fr 1fr; }
+    #help-overlay .actions { margin-top: 1rem; display: flex; justify-content: flex-end; }
+    #help-overlay button { padding: 0.5rem 0.9rem; border-radius: 0.4rem; border: 1px solid var(--primary);
+
+    /* Fragments for step-by-step reveals */
+    .fragment { opacity: 0; transform: translateY(8px); transition: opacity .25s ease, transform .25s ease; }
+    .fragment.visible { opacity: 1; transform: none; }
+
+    /* View Transitions (subtle cross-fade) */
+    @supports (view-transition-name: none) {
+      :root { view-transition-name: root; }
+      ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 200ms; }
+    }
+
+    /* Prompt links (QR + anchor) */
+    .prompt-links { display: flex; align-items: center; gap: 1rem; margin-top: .75rem; flex-wrap: wrap; }
+    .prompt-links a { padding: 0.4rem 0.7rem; border-radius: 0.4rem; border: 1px solid var(--primary); background: rgba(99,102,241,0.15); color: var(--text); text-decoration: none; }
+    .prompt-links img { border-radius: .5rem; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); }
+
+    /* Notes overlay */
+    #notes-overlay { position: fixed; inset: 0; display: none; place-items: center; background: rgba(2,6,23,0.6); backdrop-filter: blur(8px) saturate(120%); z-index: 200; padding: 2rem; }
+    #notes-overlay.open { display: grid; }
+    #notes-overlay .panel { max-width: 900px; width: min(90vw, 900px); background: color-mix(in srgb, var(--bg) 80%, white); border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: 1rem; padding: 1.5rem 2rem; }
+    #notes-overlay h3 { margin-bottom: 1rem; color: var(--secondary); }
+    #notes-overlay .actions { margin-top: 1rem; display: flex; justify-content: flex-end; }
+    #notes-overlay button { padding: 0.5rem 0.9rem; border-radius: 0.4rem; border: 1px solid var(--primary); background: rgba(99,102,241,0.15); color: var(--text); cursor: pointer; }
+
+      background: rgba(99,102,241,0.15); color: var(--text); cursor: pointer; }
+
+    /* Enhancements: responsive type, reduced motion, container queries, polish */
+    h1 { font-size: clamp(2rem, 4vw + 1rem, 3.5rem); }
+    h2 { font-size: clamp(1.5rem, 3vw + .5rem, 2.5rem); }
+    p  { font-size: clamp(1rem, 1.3vw + .6rem, 1.5rem); line-height: 1.7; }
+
+    .split-content { container-type: inline-size; }
+    @container (max-width: 800px) {
+      .split-content { grid-template-columns: 1fr; gap: 1.5rem; }
+    }
+
+    svg { width: min(80vw, 600px); aspect-ratio: 3 / 2; height: auto; }
+
+    .progress-dot:focus-visible { outline: 2px solid var(--secondary); outline-offset: 3px; }
+
+    /* Subtle glass effect */
+    .box, .code-block {
+      background: color-mix(in srgb, var(--bg) 85%, white);
+      backdrop-filter: saturate(120%) blur(10px);
+      border: 1px solid color-mix(in srgb, var(--primary) 50%, transparent);
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      .emoji { animation: none !important; }
+    }
+
   </style>
 </head>
 <body>
@@ -316,20 +392,70 @@
       <p>A Fun Guide to Building AI That Doesn't Pretend to Be Smarter Than It Is</p>
     </div>
 
+    <!-- Slide 1.5: Agenda -->
+    <div class="slide">
+      <h2>Agenda</h2>
+      <div class="rules-container" style="max-width: 900px;">
+        <div class="list-item">1) The Intern Test</div>
+        <div class="list-item">2) Why over-confidence hurts</div>
+        <div class="list-item">3) 3 Rules</div>
+        <div class="list-item">4) The flow</div>
+        <div class="list-item">5) Prompt to steal</div>
+        <div class="list-item">6) Results</div>
+        <div class="list-item">7) 3 actions</div>
+      </div>
+    </div>
+
+    <!-- Slide 1.75: About me -->
+    <div class="slide">
+      <h2>Hi, I'm Srdjan Strbanovic 👋</h2>
+      <div class="split-content">
+        <div>
+          <p class="subtitle" style="margin-bottom:1rem;">Transformational Technology Leader - NYC Tri-State Area</p>
+          <div class="rules-container" style="max-width: 900px;">
+            <div class="list-item">SVP Architecture @ First Advantage</div>
+            <div class="list-item">Co-Founder/CTO @ KlinchIt.app</div>
+            <div class="list-item">Chief Architect @ Lifion by ADP</div>
+            <div class="list-item">Principal Architect @ ThoughtWorks</div>
+            <div class="list-item">CTO @ Cignium</div>
+          </div>
+        </div>
+        <div>
+          <svg width="200" height="200" viewBox="0 0 200 200" aria-label="Srdjan avatar" style="margin-bottom:1rem;">
+            <circle cx="100" cy="100" r="95" fill="var(--primary)" opacity="0.85"></circle>
+            <text x="100" y="118" text-anchor="middle" fill="white" font-size="72" font-weight="bold">SS</text>
+          </svg>
+          <div class="prompt-links">
+            <a href="https://srdjan.github.io/" target="_blank" rel="noopener">Website</a>
+            <a href="https://github.com/srdjan" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://www.linkedin.com/in/ssrdjan/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://x.com/djidja8" target="_blank" rel="noopener">X</a>
+            <a href="https://blogo.timek.deno.net" target="_blank" rel="noopener">Blog</a>
+          </div>
+          <div class="prompt-links" style="margin-top:.75rem;">
+            <img alt="QR to srdjan.github.io" width="120" height="120" src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fsrdjan.github.io%2F" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
     <!-- Slide 2: The Intern Test -->
     <div class="slide">
       <h2>The Intern Test 🤔</h2>
       <div class="split-content">
         <div class="box danger">
           <h3>Option A: The Over-Eager Helper</h3>
-          <p style="font-size: 1.2rem;">Responds to everything immediately, makes up policies, gives vet advice 🙈</p>
+          <p style="font-size: 1.2rem;">Confidently wrong. Writes HR policy. Diagnoses your cat. 🙈</p>
         </div>
         <div class="box success">
           <h3>Option B: The Smart Intern</h3>
-          <p style="font-size: 1.2rem;">"I can handle the policy question, but need your help with the order cancellation" ✅</p>
+          <p style="font-size: 1.2rem;">Owns policy calls. Escalates cancellations with context. Leaves pets to vets. ✅</p>
         </div>
       </div>
       <p style="margin-top: 2rem;">Which intern are you keeping?</p>
+
     </div>
 
     <!-- Slide 3: The Problem -->
@@ -339,13 +465,14 @@
         <rect x="50" y="50" width="150" height="100" rx="10" fill="var(--danger)" opacity="0.3"/>
         <text x="125" y="105" text-anchor="middle" fill="white" font-size="18">LLM</text>
         <text x="125" y="125" text-anchor="middle" fill="white" font-size="14">100% Confident</text>
-        
+
         <path d="M 200 100 L 280 100" stroke="var(--danger)" stroke-width="3" marker-end="url(#arrowred)"/>
-        
+
         <text x="300" y="80" fill="var(--danger)" font-size="24">❌ Wrong Answer</text>
         <text x="300" y="120" fill="var(--danger)" font-size="24">❌ Lost Customer</text>
         <text x="300" y="160" fill="var(--danger)" font-size="24">❌ $10K Gone</text>
-        
+
+
         <defs>
           <marker id="arrowred" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
             <polygon points="0 0, 10 3, 0 6" fill="var(--danger)"/>
@@ -358,7 +485,7 @@
 
     <!-- Slide 4: Rule 1 -->
     <div class="slide">
-      <h2>Rule 1: "I Know This Cold" ✅</h2>
+      <h2>Rule 1: No Cape, No Crime ✅</h2>
       <div class="rule-box">
         <span class="icon">✅</span>
         <h3>Full Autonomy</h3>
@@ -366,7 +493,8 @@
           When to let the agent run free:<br><br>
           • Clearly documented (FAQ answers)<br>
           • Low stakes (no money, no legal stuff)<br>
-          • Easily reversible (no harm if wrong)
+          • Easily reversible (no harm if wrong)<br>
+          • If outside that scope → say "I don't know" and escalate
         </p>
       </div>
       <div class="example">
@@ -379,7 +507,7 @@
 
     <!-- Slide 5: Rule 2 -->
     <div class="slide">
-      <h2>Rule 2: "Let Me Show You My Work" 📝</h2>
+      <h2>Rule 2: Show Your Work 📝</h2>
       <div class="rule-box">
         <span class="icon">📝</span>
         <h3>Propose & Confirm</h3>
@@ -399,7 +527,7 @@
 
     <!-- Slide 6: Rule 3 -->
     <div class="slide">
-      <h2>Rule 3: "Above My Pay Grade" 🚨</h2>
+      <h2>Rule 3: Escalate Like a Pro 🚨</h2>
       <div class="rule-box">
         <span class="icon">🚨</span>
         <h3>Escalate Immediately</h3>
@@ -443,7 +571,8 @@ Before responding, ask yourself:<br><br>
     <!-- Slide 8: Real Prompt Example -->
     <div class="slide">
       <h2>A Real Prompt That Works 📋</h2>
-      <div class="code-block" style="font-size: 1rem; max-width: 1000px;">
+      <button class="copy-btn" data-copy style="margin-bottom: 1rem; padding: 0.5rem 1rem; border-radius: 0.4rem; border: 1px solid var(--primary); background: rgba(99,102,241,0.15); color: var(--text); cursor: pointer;">Copy full prompt</button>
+      <div class="code-block" data-copy-source style="font-size: 1rem; max-width: 1000px;">
 You are a customer support agent. Before responding:<br><br>
 
 <span style="color: var(--success);">1. ASSESS YOUR CONFIDENCE (0-100)</span><br>
@@ -464,8 +593,28 @@ You are a customer support agent. Before responding:<br><br>
 
 <span style="color: var(--secondary);">Always explain your reasoning briefly in your response.</span>
       </div>
+      <div class="prompt-links">
+        <a id="prompt-link" href="#" target="_blank" rel="noopener">Open full prompt</a>
+        <img id="prompt-qr" alt="QR to full prompt" width="120" height="120" />
+      </div>
+
       <p style="font-size: 1.2rem; margin-top: 1.5rem;">Copy, paste, adjust for your domain. That's it! 🎯</p>
     </div>
+
+    <!-- Slide 8b: Escalation Template -->
+    <div class="slide">
+      <h2>Escalation Template (Copy‑paste) 📋</h2>
+      <button class="copy-btn" data-copy style="margin-bottom: 1rem; padding: 0.5rem 1rem; border-radius: 0.4rem; border: 1px solid var(--primary); background: rgba(99,102,241,0.15); color: var(--text); cursor: pointer;">Copy</button>
+      <pre class="code-block" data-copy-source style="font-size: 1rem; max-width: 1000px; white-space: pre-wrap;">
+[ESCALATE]
+Reason: …
+Context: …
+Suggested action: …
+Confidence: X/100
+      </pre>
+      <p style="font-size: 1.2rem; margin-top: 1rem;">Use for high-stakes or low-confidence cases.</p>
+    </div>
+
 
     <!-- Slide 9: Why This Works -->
     <div class="slide">
@@ -494,23 +643,23 @@ You are a customer support agent. Before responding:<br><br>
       <h2>Real Results 📈</h2>
       <svg width="600" height="350" viewBox="0 0 600 350">
         <text x="300" y="40" text-anchor="middle" fill="var(--primary)" font-size="24" font-weight="bold">Before → After</text>
-        
+
         <rect x="50" y="80" width="200" height="60" rx="10" fill="var(--danger)" opacity="0.3"/>
         <text x="150" y="115" text-anchor="middle" fill="white" font-size="16">2 hour response</text>
-        
+
         <text x="280" y="115" text-anchor="middle" fill="var(--success)" font-size="24">→</text>
-        
+
         <rect x="350" y="80" width="200" height="60" rx="10" fill="var(--success)" opacity="0.3"/>
         <text x="450" y="115" text-anchor="middle" fill="white" font-size="16">3 minute response</text>
-        
+
         <rect x="50" y="160" width="200" height="60" rx="10" fill="var(--warning)" opacity="0.3"/>
         <text x="150" y="195" text-anchor="middle" fill="white" font-size="16">1.2% error rate</text>
-        
+
         <text x="280" y="195" text-anchor="middle" fill="var(--success)" font-size="24">→</text>
-        
+
         <rect x="350" y="160" width="200" height="60" rx="10" fill="var(--success)" opacity="0.3"/>
         <text x="450" y="195" text-anchor="middle" fill="white" font-size="16">0.3% error rate</text>
-        
+
         <text x="300" y="270" text-anchor="middle" fill="var(--secondary)" font-size="28">+12 Point CSAT Score</text>
         <text x="300" y="310" text-anchor="middle" fill="var(--success)" font-size="22">30% Agent Productivity Gain</text>
       </svg>
@@ -571,8 +720,38 @@ You are a customer support agent. Before responding:<br><br>
   </div>
 
   <div class="progress"></div>
+  <div id="slide-announcer" class="sr-only" aria-live="polite"></div>
   <div class="controls">
     <span>← → or Space to navigate</span>
+    <button data-help-toggle style="padding: 0.4rem 0.7rem; border-radius: 0.4rem; border: 1px solid var(--primary); background: rgba(99,102,241,0.15); color: var(--text); cursor: pointer;">Help (H)</button>
+    <button data-notes-toggle style="padding: 0.4rem 0.7rem; border-radius: 0.4rem; border: 1px solid var(--primary); background: rgba(99,102,241,0.15); color: var(--text); cursor: pointer;">Notes (S)</button>
+  </div>
+
+  <div id="help-overlay" role="dialog" aria-modal="false" aria-labelledby="help-title">
+    <div class="panel">
+      <h3 id="help-title">Presentation controls</h3>
+      <div class="grid">
+        <div>Next slide</div><div>→ or Space or click right</div>
+        <div>Previous slide</div><div>← or click left</div>
+        <div>First/Last</div><div>Home / End</div>
+        <div>Jump to slide</div><div>Click a dot</div>
+        <div>Help</div><div>H</div>
+        <div>Speaker notes</div><div>S</div>
+      </div>
+      <div class="actions">
+        <button data-help-close>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="notes-overlay" role="dialog" aria-modal="false" aria-labelledby="notes-title">
+    <div class="panel">
+      <h3 id="notes-title">Speaker notes</h3>
+      <div id="notes-content" style="font-size: 1.1rem; line-height: 1.6;"></div>
+      <div class="actions">
+        <button data-notes-close>Close</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -604,25 +783,150 @@ You are a customer support agent. Before responding:<br><br>
       progressDots.forEach((dot, index) => {
         dot.classList.toggle('active', index === currentSlide);
       });
+
+      // Fragments: reveal up to current index for each slide
+      slides.forEach((slide, i) => {
+        const frags = fragmentsBySlide[i] || [];
+        frags.forEach((el, j) => el.classList.toggle('visible', j < (fragmentIndexBySlide[i] || 0)));
+      });
+
+      // Accessibility: announce current slide title and update document title
+      const announcer = document.getElementById('slide-announcer');
+      const active = slides[currentSlide];
+      const heading = active && active.querySelector('h1, h2, h3');
+      if (announcer && heading) announcer.textContent = heading.textContent;
+      if (heading) document.title = `${heading.textContent} — Teaching Your AI Agent`;
     }
 
+    // View transition helper
+    const withTransition = (fn) => {
+      if (document.startViewTransition) {
+        document.startViewTransition(() => { fn(); });
+      } else { fn(); }
+    };
+
+    // Fragments support
+    const fragmentsBySlide = [];
+    const fragmentIndexBySlide = [];
+
+    function initFragments() {
+      slides.forEach((slide, i) => {
+        // Auto-mark fragments for Agenda and benefit lists
+        const heading = slide.querySelector('h1, h2, h3');
+        const title = heading?.textContent || '';
+        if (!slide.querySelector('.fragment')) {
+          if (title.includes('Agenda')) {
+            slide.querySelectorAll('.rules-container .list-item').forEach(el => el.classList.add('fragment'));
+          }
+          if (title.includes('Why This Makes Your Life Better')) {
+            slide.querySelectorAll('.rules-container .rule-box').forEach(el => el.classList.add('fragment'));
+          }
+        }
+        fragmentsBySlide[i] = Array.from(slide.querySelectorAll('.fragment'));
+        fragmentIndexBySlide[i] = fragmentIndexBySlide[i] ?? 0;
+      });
+    }
+
+    initFragments();
+
     function nextSlide() {
+      const frags = fragmentsBySlide[currentSlide] || [];
+      if (fragmentIndexBySlide[currentSlide] < frags.length) {
+        fragmentIndexBySlide[currentSlide]++;
+        return withTransition(updateSlides);
+      }
       if (currentSlide < slides.length - 1) {
-        currentSlide++;
-        updateSlides();
+        withTransition(() => { currentSlide++; updateSlides(); location.hash = `slide-${currentSlide + 1}`; });
       }
     }
 
     function prevSlide() {
+      const frags = fragmentsBySlide[currentSlide] || [];
+      if (fragmentIndexBySlide[currentSlide] > 0) {
+        fragmentIndexBySlide[currentSlide]--;
+        return withTransition(updateSlides);
+      }
       if (currentSlide > 0) {
-        currentSlide--;
-        updateSlides();
+        withTransition(() => { currentSlide--; updateSlides(); location.hash = `slide-${currentSlide + 1}`; });
       }
     }
 
     function goToSlide(index) {
-      currentSlide = index;
-      updateSlides();
+
+      // Prompt links (QR + anchor)
+      (function(){
+        const url = (window.PROMPT_URL || (document.querySelector('meta[name="prompt-url"]')?.getAttribute('content') || '')).trim();
+        const link = document.getElementById('prompt-link');
+        const img = document.getElementById('prompt-qr');
+        const container = link && link.closest('.prompt-links');
+        if (url && link && img) {
+          link.href = url;
+          img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=' + encodeURIComponent(url);
+          img.width = 120; img.height = 120;
+        } else if (container && container instanceof HTMLElement) {
+          container.style.display = 'none';
+        }
+      })();
+
+      // Speaker notes
+      const notesOverlay = document.getElementById('notes-overlay');
+      const notesContent = document.getElementById('notes-content');
+      const openNotes = () => notesOverlay?.classList.add('open');
+      const closeNotes = () => notesOverlay?.classList.remove('open');
+
+      function buildNotes() {
+        const arr = Array.from(slides, (s) => (s.querySelector('h1,h2,h3')?.textContent || '').trim());
+        const setNote = (includes, text) => {
+          const idx = arr.findIndex(t => t.includes(includes));
+          if (idx >= 0) arr[idx] = text;
+        };
+        setNote('Title', 'Hook: “The Intern” metaphor; promise: framework + prompt + 3 steps.');
+        setNote('Agenda', 'Set expectations: intern test → rules → flow → prompt → results → actions.');
+        setNote('Srdjan Strbanovic', 'Quick personal intro: role, region, links; credibility, then move on.');
+
+        setNote('The Intern Test', 'Quick laugh: confidently wrong vs smart intern; foreshadow escalation.');
+        setNote('The Problem', 'Overconfidence is worse than ignorance; show a “hallucination” example.');
+        setNote('Rule 1', 'Scope: documented + low stakes + reversible → OK; else escalate.');
+        setNote('Rule 2', 'Require chain-of-thought style logs (surface as value, not hidden).');
+        setNote('Rule 3', 'Define clear escalation outputs with structured fields.');
+        setNote('How to Actually Build This', 'Ports + Result types; keep core pure; wire effects at edges.');
+        setNote('A Real Prompt', 'Call out thresholds; copy button; QR to gist.');
+        setNote('Escalation Template', 'Use for high-stakes/low-confidence; quick fill + handoff.');
+        setNote('Why This Makes Your Life Better', 'Dev/Business/Customer benefits in plain language.');
+        setNote('Real Results', 'Before → After visual; call out CSAT and productivity bumps.');
+        setNote('The Punchline', '“Best interns know when to ask for help.”');
+        setNote('3 Fast Action Items', 'Pilot in one queue; add Result logs; pick human handoff.');
+        setNote('Closing', 'CTA: try the prompt; reach out with questions.');
+        return arr;
+      }
+
+      let notes = buildNotes();
+
+      function refreshNotes() {
+        if (!notesOverlay || !notesContent) return;
+        const total = slides.length;
+        const title = slides[currentSlide]?.querySelector('h1,h2,h3')?.textContent || `Slide ${currentSlide+1}`;
+        const body = notes[currentSlide] || title;
+        notesContent.innerHTML = `<div style="opacity:.8; font-size:.9rem;">Slide ${currentSlide+1} / ${total} — ${title}</div><div style="margin-top:.5rem;">${body}</div>`;
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === 's') {
+          e.preventDefault();
+          if (notesOverlay?.classList.contains('open')) closeNotes(); else { refreshNotes(); openNotes(); }
+        } else if (e.key === 'Escape' && notesOverlay?.classList.contains('open')) {
+          closeNotes();
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        const t = e.target;
+        if (t instanceof Element && t.closest('[data-notes-toggle]')) { refreshNotes(); openNotes(); }
+        if (t instanceof Element && t.closest('[data-notes-close]')) closeNotes();
+        if (e.target === notesOverlay) closeNotes();
+      });
+
+      withTransition(() => { currentSlide = Math.max(0, Math.min(index, slides.length - 1)); updateSlides(); location.hash = `slide-${currentSlide + 1}`; });
     }
 
     // Keyboard navigation
@@ -663,16 +967,79 @@ You are a customer support agent. Before responding:<br><br>
     // Mouse click navigation
     document.addEventListener('click', (e) => {
       if (e.target.closest('.progress') || e.target.closest('.controls')) return;
-      
+
       const clickX = e.clientX;
       const windowWidth = window.innerWidth;
-      
+
       if (clickX > windowWidth * 0.7) {
         nextSlide();
       } else if (clickX < windowWidth * 0.3) {
         prevSlide();
       }
     });
+
+    // Deep-linking, hash sync, and copy-to-clipboard enhancements
+    (function(){
+      const setFromHash = () => {
+        const m = location.hash.match(/slide-(\d+)/);
+        if (m) {
+          const idx = Math.min(parseInt(m[1], 10) - 1, slides.length - 1);
+          if (!Number.isNaN(idx)) {
+            currentSlide = idx;
+            updateSlides();
+          }
+        }
+      };
+      window.addEventListener('load', setFromHash);
+      window.addEventListener('hashchange', setFromHash);
+
+      // Help overlay toggles (H key and button)
+      const help = document.getElementById('help-overlay');
+      const openHelp = () => help?.classList.add('open');
+      const closeHelp = () => help?.classList.remove('open');
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === 'h') {
+          e.preventDefault();
+          if (help?.classList.contains('open')) closeHelp(); else openHelp();
+        } else if (e.key === 'Escape' && help?.classList.contains('open')) {
+          closeHelp();
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        const t = e.target;
+        if (t instanceof Element && t.closest('[data-help-toggle]')) openHelp();
+        if (t instanceof Element && t.closest('[data-help-close]')) closeHelp();
+        if (t === help) closeHelp();
+      });
+
+
+      // Wrap goToSlide to update hash
+      if (typeof window.goToSlide === 'function') {
+        const originalGoToSlide = window.goToSlide;
+        window.goToSlide = (index) => {
+          originalGoToSlide(index);
+          location.hash = `slide-${currentSlide + 1}`;
+        };
+      }
+
+      // Copy-to-clipboard for prompt slides
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-copy]');
+        if (!btn) return;
+        const host = btn.closest('.slide');
+        const code = host && host.querySelector('[data-copy-source]');
+        if (code) {
+          navigator.clipboard.writeText(code.innerText.trim()).then(() => {
+            const prev = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(() => (btn.textContent = prev || 'Copy'), 1200);
+          });
+        }
+      });
+    })();
+
   </script>
 </body>
 </html>

@@ -30,8 +30,11 @@ This is a single-file HTML presentation repository for a lightning talk titled *
 
 ```
 /
-├── ap-lightning-talk-2025.html   # Complete standalone presentation
-└── CLAUDE.md                      # This file
+├── main.ts         # Deno server entry point
+├── deno.json       # Deno configuration
+├── index.html      # Complete standalone presentation
+├── CLAUDE.md       # This file
+└── README.md       # Project documentation
 ```
 
 ## Technology Stack
@@ -81,15 +84,21 @@ Uses the experimental View Transitions API when available for smoother slide tra
 
 ## Quick Start
 
-Open the presentation directly in any modern browser:
+### Using Deno (Recommended)
 ```bash
-open ap-lightning-talk-2025.html
+deno task dev
+# Visit: http://localhost:8000
 ```
 
-Or use a local development server:
+### Direct Browser Access
+```bash
+open index.html
+```
+
+### Alternative: Python Server
 ```bash
 python3 -m http.server 8000
-# Visit: http://localhost:8000/ap-lightning-talk-2025.html
+# Visit: http://localhost:8000
 ```
 
 **Navigation Controls**:

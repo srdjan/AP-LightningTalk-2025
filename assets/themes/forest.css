@@ -1,0 +1,26 @@
+/* Forest Theme - Natural greens with warm earth tones */
+:root {
+  --primary: #10b981;
+  --secondary: #f59e0b;
+  --success: #22c55e;
+  --warning: #fb923c;
+  --danger: #dc2626;
+  --bg: #1a2f1a;
+  --text: #f0fdf4;
+  --text-dim: #bbf7d0;
+  --glass: color-mix(in srgb, var(--bg) 70%, transparent);
+
+  /* Typography */
+  --font-ui: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  /* Layout and spacing */
+  --radius: 1.5rem;
+  --shadow-1: 0 8px 32px color-mix(in srgb, black 40%, transparent);
+  --shadow-2: 0 12px 48px color-mix(in srgb, black 50%, transparent);
+
+  /* Animation */
+  --dur-fast: 200ms;
+  --dur: 600ms;
+  --easing: cubic-bezier(0.4, 0, 0.2, 1);
+}

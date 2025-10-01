@@ -1,0 +1,26 @@
+/* Sunset Theme - Warm oranges and purples */
+:root {
+  --primary: #f97316;
+  --secondary: #a855f7;
+  --success: #22c55e;
+  --warning: #fbbf24;
+  --danger: #dc2626;
+  --bg: #1a0f1a;
+  --text: #fef3c7;
+  --text-dim: #fde68a;
+  --glass: color-mix(in srgb, var(--bg) 70%, transparent);
+
+  /* Typography */
+  --font-ui: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  /* Layout and spacing */
+  --radius: 1.5rem;
+  --shadow-1: 0 8px 32px color-mix(in srgb, var(--primary) 30%, transparent);
+  --shadow-2: 0 12px 48px color-mix(in srgb, var(--secondary) 20%, transparent);
+
+  /* Animation */
+  --dur-fast: 200ms;
+  --dur: 600ms;
+  --easing: cubic-bezier(0.4, 0, 0.2, 1);
+}

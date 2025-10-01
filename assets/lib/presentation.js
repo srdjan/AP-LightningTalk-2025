@@ -251,5 +251,52 @@ function showNotes() {
   notes.open ? notes.close() : notes.showModal();
 }
 
+// Theme switching functionality
+const themes = ['dark', 'light', 'cyberpunk', 'ocean', 'forest', 'sunset'];
+let themeLink = null;
+
+function initThemeSystem() {
+  // Create theme link element
+  themeLink = document.createElement('link');
+  themeLink.rel = 'stylesheet';
+  themeLink.id = 'theme-stylesheet';
+  document.head.appendChild(themeLink);
+
+  // Load saved theme or default to 'dark'
+  const savedTheme = localStorage.getItem('presentation-theme') || 'dark';
+  loadTheme(savedTheme);
+
+  // Setup theme button listeners (after slides load)
+  setTimeout(() => {
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const theme = e.target.dataset.theme;
+        if (theme) {
+          loadTheme(theme);
+          localStorage.setItem('presentation-theme', theme);
+        }
+      });
+    });
+    updateThemeButtons(savedTheme);
+  }, 100);
+}
+
+function loadTheme(themeName) {
+  if (!themes.includes(themeName)) themeName = 'dark';
+  themeLink.href = `assets/themes/${themeName}.css`;
+  updateThemeButtons(themeName);
+}
+
+function updateThemeButtons(activeTheme) {
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    if (btn.dataset.theme === activeTheme) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+}
+
 // Initialize on load
+initThemeSystem();
 loadSlides();

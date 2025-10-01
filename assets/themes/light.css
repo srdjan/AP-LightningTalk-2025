@@ -1,0 +1,36 @@
+/* Light Theme - Clean light mode with vibrant colors */
+:root {
+  --primary: #6366f1;
+  --secondary: #ec4899;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg: #ffffff;
+  --text: #1e293b;
+  --text-dim: #64748b;
+  --glass: color-mix(in srgb, var(--bg) 80%, transparent);
+
+  /* Typography */
+  --font-ui: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  /* Layout and spacing */
+  --radius: 1.5rem;
+  --shadow-1: 0 8px 32px color-mix(in srgb, black 10%, transparent);
+  --shadow-2: 0 12px 48px color-mix(in srgb, black 15%, transparent);
+
+  /* Animation */
+  --dur-fast: 200ms;
+  --dur: 600ms;
+  --easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light theme specific overrides */
+pre {
+  background: color-mix(in srgb, black 8%, var(--bg)) !important;
+  border-left-color: var(--success) !important;
+}
+
+dialog {
+  box-shadow: 0 20px 60px color-mix(in srgb, black 20%, transparent);
+}

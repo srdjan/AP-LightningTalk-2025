@@ -113,8 +113,7 @@ Structure:
 │   ├── 01-title.md
 │   ├── 02-outline.md
 │   └── ...
-├── main.ts                # Static file server (serves presentation + assets)
-└── index.html.bak         # Previous single-file deck backup (if present)
+└── main.ts                # Static file server (serves presentation + assets)
 ```
 
 Slide authoring:

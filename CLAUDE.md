@@ -61,26 +61,37 @@ slides/*.md           # Individual slide content in Markdown
 ├── main.ts                      # Deno HTTP server (entry point)
 ├── deno.json                    # Deno tasks and deploy config
 ├── presentation.html            # Minimal HTML shell (34 lines, 1.2KB)
-├── theme.css                    # All CSS styles (222 lines, 4.2KB)
+├── theme.css                    # Base CSS styles (222 lines, 4.2KB)
 ├── assets/
-│   └── lib/
-│       └── presentation.js      # All JavaScript logic (255 lines, 7.9KB)
+│   ├── lib/
+│   │   └── presentation.js      # All JavaScript logic (303 lines, 9.1KB)
+│   └── themes/
+│       ├── dark.css             # Dark theme (default)
+│       ├── light.css            # Light theme
+│       ├── cyberpunk.css        # Cyberpunk theme
+│       ├── ocean.css            # Ocean theme
+│       ├── forest.css           # Forest theme
+│       └── sunset.css           # Sunset theme
 ├── slides/
 │   ├── manifest.json            # Slide order (array of filenames)
-│   ├── 01-title.md              # Individual slide content
+│   ├── 01-title.md              # Title slide with theme switcher
 │   ├── 02-outline.md
 │   └── ...
-├── generate-index.ts            # Legacy generator for single-file HTML
 ├── CLAUDE.md                    # This file
-└── README.md                    # User-facing documentation
+├── README.md                    # User-facing documentation
+├── REFACTORING_SUMMARY.md       # Refactoring documentation
+├── THEME_FEATURE_SUMMARY.md     # Theme feature implementation notes
+└── THEME_SWITCHER_GUIDE.md      # Theme user/developer guide
 ```
 
-**Recent refactoring (2025-10-01):**
-- Removed 3 unused files: `index-old.html`, `index.html.bak`, `create-index.sh`
-- Extracted inline CSS from `presentation.html` to `theme.css` (single source of truth)
-- Extracted inline JavaScript to external module `assets/lib/presentation.js`
-- Reduced `presentation.html` from 152 lines to 34 lines (78% reduction)
-- Better separation of concerns: HTML structure, CSS styles, JS behavior now fully decoupled
+**Recent updates (2025-10-01):**
+- **Cleanup**: Removed 4 unused files: `index-old.html`, `index.html.bak`, `create-index.sh`, `generate-index.ts`
+- **Refactoring**: Extracted inline CSS from `presentation.html` to `theme.css` (single source of truth)
+- **Refactoring**: Extracted inline JavaScript to external module `assets/lib/presentation.js`
+- **Optimization**: Reduced `presentation.html` from 152 lines to 34 lines (78% reduction)
+- **Architecture**: Better separation of concerns - HTML structure, CSS styles, JS behavior now fully decoupled
+- **Feature**: Added theme switcher with 6 themes (dark, light, cyberpunk, ocean, forest, sunset)
+- **UX**: Theme preference saved to localStorage for persistence
 
 ### Technology Stack
 
@@ -223,21 +234,46 @@ Elements with `.fragment` class are hidden initially and revealed progressively:
 
 ## Theming and Styling
 
+### Theme Switcher (New Feature - 2025-10-01)
+
+The presentation now supports **6 switchable themes** available on the first slide:
+
+**Available Themes:**
+- 🌙 **Dark** (default) - Professional dark mode with indigo/pink accents
+- ☀️ **Light** - Clean light mode with vibrant colors
+- ⚡ **Cyberpunk** - Neon pink/cyan with dark background and glowing effects
+- 🌊 **Ocean** - Deep blue with aqua accents
+- 🌲 **Forest** - Natural greens with warm earth tones
+- 🌅 **Sunset** - Warm oranges and purples
+
+**How it works:**
+- Theme buttons appear on the title slide (slide 1)
+- Selected theme is saved to `localStorage` and persists across sessions
+- Theme files located in `assets/themes/*.css`
+- Each theme defines CSS custom properties (colors, shadows, etc.)
+- Switching is instant with smooth transitions
+
+**Creating a new theme:**
+1. Create `assets/themes/mytheme.css`
+2. Define all CSS custom properties (use `dark.css` as template)
+3. Add theme to `themes` array in `presentation.js` (line 255)
+4. Add button to `slides/01-title.md` theme switcher
+
 ### CSS Custom Properties
 
-All visual styling is controlled via CSS variables in `theme.css`:
+All themes use the same CSS variable structure:
 
 **Colors:**
 ```css
---primary: #818cf8    /* Indigo (main brand) */
---secondary: #f472b6  /* Pink (accents) */
---success: #34d399    /* Green (positive) */
---warning: #fbbf24    /* Amber (caution) */
---danger: #f87171     /* Red (alerts) */
---bg: #0a0e1a         /* Dark slate background */
+--primary: #818cf8    /* Main brand color */
+--secondary: #f472b6  /* Accent color */
+--success: #34d399    /* Success states */
+--warning: #fbbf24    /* Warning states */
+--danger: #f87171     /* Error states */
+--bg: #0a0e1a         /* Background */
 --text: #ffffff       /* Primary text */
 --text-dim: #cbd5e1   /* Secondary text */
---glass: color-mix(...)  /* Glassmorphism background */
+--glass: color-mix(...)  /* Glassmorphism effect */
 ```
 
 **Typography:**

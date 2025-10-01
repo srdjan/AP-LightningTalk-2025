@@ -1,0 +1,39 @@
+/* Cyberpunk Theme - Neon pink/cyan with dark background */
+:root {
+  --primary: #ff2a6d;
+  --secondary: #05d9e8;
+  --success: #01ff89;
+  --warning: #ffd319;
+  --danger: #ff006e;
+  --bg: #0d1b2a;
+  --text: #e0fbfc;
+  --text-dim: #a9d1d6;
+  --glass: color-mix(in srgb, var(--bg) 60%, transparent);
+
+  /* Typography */
+  --font-ui: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  /* Layout and spacing */
+  --radius: 0.5rem;
+  --shadow-1: 0 0 20px color-mix(in srgb, var(--primary) 40%, transparent);
+  --shadow-2: 0 0 40px color-mix(in srgb, var(--secondary) 40%, transparent);
+
+  /* Animation */
+  --dur-fast: 200ms;
+  --dur: 600ms;
+  --easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Cyberpunk theme specific effects */
+h1, h2 {
+  text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
+}
+
+.dot.active {
+  box-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary) !important;
+}
+
+nav {
+  box-shadow: 0 0 20px color-mix(in srgb, var(--secondary) 30%, transparent);
+}

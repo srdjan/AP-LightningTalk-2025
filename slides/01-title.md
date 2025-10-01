@@ -1,6 +1,6 @@
-# Teaching Your AI Agent the Art of Knowing Nothing
+# Teaching Your AI the Art of Knowing Less
 
-(Sometimes)
+(... at least sometimes)
 
 A practical guide to building AI that doesn't pretend to be smarter than it is
 

@@ -1,6 +1,9 @@
 import { serveFile } from "https://deno.land/std@0.224.0/http/file_server.ts";
 
-Deno.serve(async (req: Request) => {
+const portArg = Deno.args.find((a) => a.startsWith("--port="));
+const PORT = portArg ? Number(portArg.split("=")[1]) : 8000;
+
+Deno.serve({ port: PORT }, async (req: Request) => {
   const url = new URL(req.url);
   const path = decodeURIComponent(url.pathname);
 

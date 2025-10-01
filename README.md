@@ -11,7 +11,7 @@ agents that know when to admit uncertainty and escalate appropriately.
 deno task dev
 ```
 
-Visit http://localhost:8000
+Visit http://localhost:8000 (or your chosen port)
 
 ### Production Server
 
@@ -44,20 +44,31 @@ Or use the GitHub integration:
 
 ```
 .
-├── main.ts         # Deno server entry point
-├── deno.json       # Deno configuration
-├── index.html      # Complete presentation (standalone)
-├── CLAUDE.md       # Development guide
-└── README.md       # This file
+├── presentation.html          # HTML shell (entry)
+├── assets/
+│   ├── lib/
+│   │   └── presentation.js    # Presentation engine (JS)
+│   └── themes/
+│       └── theme.css          # Base theme variables/styles
+├── slides/
+│   ├── manifest.json          # Slide order
+│   ├── 01-title.md
+│   └── ...
+├── deno.json                  # Deno tasks and deploy config
+├── main.ts                    # Deno HTTP server (serves static assets)
+├── README.md
+└── CLAUDE.md
 ```
 
 ## 🎯 Features
 
-- **Zero Dependencies**: Single HTML file with embedded CSS/JS
-- **Modern Stack**: Deno + Web Standards
-- **Responsive**: Works on desktop, tablet, and mobile
-- **Interactive**: Keyboard, mouse, and touch navigation
-- **Accessible**: ARIA labels, screen reader support
+- **Zero build, no external dependencies**: Vanilla JS/CSS, no bundlers
+- **Modular, Markdown-driven slides**: One .md per slide, manifest-controlled
+  order
+- **Responsive**: Desktop, tablet, and mobile
+- **Interactive**: Keyboard, mouse, touch, and deep-linking
+- **Accessible**: ARIA, focus-visible outlines, screen reader announcements
+- **Utilities**: Copy-to-clipboard on code blocks, Help overlay, Speaker notes
 
 ## 🎨 Navigation
 
@@ -106,14 +117,18 @@ Structure:
 
 ```
 .
-├── presentation.html      # Generic engine that renders slides from /slides
-├── theme.css              # Theme variables (CSS custom properties)
-├── slides/                # One Markdown file per slide
-│   ├── manifest.json      # Slide order
+├── presentation.html      # HTML shell (renders slides from /slides)
+├── assets/
+│   ├── lib/
+│   │   └── presentation.js   # All JS logic (engine)
+│   └── themes/
+│       └── theme.css         # Base theme variables/styles
+├── slides/                  # One Markdown file per slide
+│   ├── manifest.json        # Slide order
 │   ├── 01-title.md
 │   ├── 02-outline.md
 │   └── ...
-└── main.ts                # Static file server (serves presentation + assets)
+└── main.ts                  # Static file server (serves presentation + assets)
 ```
 
 Slide authoring:
@@ -125,14 +140,18 @@ Slide authoring:
 
 Theme:
 
-- Edit colors, fonts, and animation variables in `theme.css`
+- Edit colors, fonts, and animation variables in `assets/themes/theme.css`
 
 Run:
 
 ```bash
-# Dev server
+# Dev server (default port 8000)
 deno task dev
-# Visit http://localhost:8000 (serves presentation.html at /)
+
+# Or choose a custom port (pass through extra args after --)
+deno task dev -- --port=8010
+
+# Then visit http://localhost:8000 (or your chosen port)
 ```
 
 Deep links and navigation still work:

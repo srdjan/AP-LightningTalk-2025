@@ -3,9 +3,12 @@
 <div class="profile-container">
   <div class="profile-card">
     <div class="profile-header">
+        <p><a href="https://srdjan.github.io/" target="_blank" rel="noopener" class="profile-link">
+        <p class="section-title">🔗 Lets Connect ⊣˚∆˚⊢</p>
+        </a>
+        </p>
       <div class="profile-avatar">
         <div class="avatar-circle">
-          <!-- Option 1: Use local image (recommended) -->
           <img src="assets/images/avatar.jpg" alt="Srdjan Strbanovic" class="avatar-image" />
         </div>
         <div class="avatar-glow"></div>
@@ -13,11 +16,6 @@
       <div class="profile-title">
         <p class="profile-location">📍 Asbury Park, NJ</p>
       </div>
-    </div>
-    <div class="profile-links">
-      <a href="https://srdjan.github.io/" target="_blank" rel="noopener" class="profile-link">
-      <h4 class="section-title">🔗 Lets Connect ⊣˚∆˚⊢</h4>
-      </a>
     </div>
   </div>
 </div>
@@ -31,7 +29,7 @@
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: clamp(1rem, 4vw, 2rem);
   animation: slideInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
@@ -43,7 +41,7 @@
   backdrop-filter: blur(20px) saturate(180%);
   border: 2px solid color-mix(in srgb, var(--primary) 30%, transparent);
   border-radius: 1.5rem;
-  padding: 2.5rem;
+  padding: clamp(1rem, 4vw, 2.5rem);
   box-shadow:
     0 20px 60px color-mix(in srgb, black 40%, transparent),
     0 0 0 1px color-mix(in srgb, var(--primary) 20%, transparent) inset,
@@ -72,9 +70,22 @@
 .profile-header {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: clamp(1rem, 3vw, 2rem);
   margin-bottom: 2rem;
+  flex-wrap: wrap; /* allow full-row items like .profile-links */
 }
+
+
+/* Center and place the header-level profile-links as a full row */
+.profile-header .profile-links {
+  order: 3;               /* render after avatar/title within header */
+  flex: 0 0 100%;         /* take full row width */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0 0.75rem;
+}
+.profile-header .profile-links .section-title { margin: 0; }
 
 .profile-avatar {
   position: relative;
@@ -82,8 +93,8 @@
 }
 
 .avatar-circle {
-  width: 120px;
-  height: 120px;
+  width: clamp(80px, 18vw, 120px);
+  height: clamp(80px, 18vw, 120px);
   border-radius: 50%;
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   display: flex;
@@ -180,6 +191,7 @@
   margin: 0 0 1.5rem 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  text-align: center;
 }
 
 .experience-grid {
@@ -236,7 +248,7 @@
 .links-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: clamp(.5rem, 2.5vw, 1rem);
   justify-content: center;
 }
 
@@ -261,6 +273,19 @@
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   box-shadow: 0 8px 25px color-mix(in srgb, var(--primary) 40%, transparent);
   color: white;
+}
+
+
+.profile-link:focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 3px;
+}
+
+/* Ensure comfortable touch target */
+.profile-link { min-height: 44px; }
+
+@media (max-width: 480px) {
+  .profile-header { gap: 1rem; }
 }
 
 .link-icon {

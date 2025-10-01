@@ -1,34 +1,34 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Agent Talk — Modular</title>
-  <link rel="stylesheet" href="./assets/themes/theme.css">
-</head>
-<body>
-  <main id="deck"></main>
-  <nav id="nav" aria-label="Slide navigation"></nav>
-  <dialog id="help">
-    <h3>⌨️ Keyboard Shortcuts</h3>
-    <div class="help-grid">
-      <kbd>→</kbd><span>Next slide</span>
-      <kbd>←</kbd><span>Previous slide</span>
-      <kbd>Space</kbd><span>Next slide</span>
-      <kbd>Home</kbd><span>First slide</span>
-      <kbd>End</kbd><span>Last slide</span>
-      <kbd>H</kbd><span>Toggle help</span>
-      <kbd>S</kbd><span>Toggle speaker notes</span>
-      <kbd>Esc</kbd><span>Close dialog</kbd>
-    </div>
-    <button class="btn" onclick="help.close()">Got it!</button>
-  </dialog>
-  <dialog id="notes">
-    <h3>📝 Speaker notes</h3>
-    <div id="notes-body" style="margin:.5rem 0 1rem"></div>
-    <button class="btn" onclick="notes.close()">Close</button>
-  </dialog>
-  <div id="announcer" class="sr-only" aria-live="polite"></div>
-  <script src="assets/lib/presentation.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Agent Talk — Modular</title>
+    <link rel="stylesheet" href="./assets/themes/theme.css">
+  </head>
+  <body>
+    <main id="deck"></main>
+    <nav id="nav" aria-label="Slide navigation"></nav>
+    <dialog id="help">
+      <h3>⌨️ Keyboard Shortcuts</h3>
+      <div class="help-grid">
+        <kbd>→</kbd><span>Next slide</span>
+        <kbd>←</kbd><span>Previous slide</span>
+        <kbd>Space</kbd><span>Next slide</span>
+        <kbd>Home</kbd><span>First slide</span>
+        <kbd>End</kbd><span>Last slide</span>
+        <kbd>H</kbd><span>Toggle help</span>
+        <kbd>S</kbd><span>Toggle speaker notes</span>
+        <kbd>Esc</kbd><span>Close dialog</span>
+      </div>
+      <button class="btn" onclick="help.close()">Got it!</button>
+    </dialog>
+    <dialog id="notes">
+      <h3>📝 Speaker notes</h3>
+      <div id="notes-body" style="margin: 0.5rem 0 1rem"></div>
+      <button class="btn" onclick="notes.close()">Close</button>
+    </dialog>
+    <div id="announcer" class="sr-only" aria-live="polite"></div>
+    <script src="assets/lib/presentation.js"></script>
+  </body>
 </html>

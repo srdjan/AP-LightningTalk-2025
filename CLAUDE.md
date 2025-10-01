@@ -18,248 +18,360 @@ Connect:
 - GitHub: https://github.com/srdjan
 - LinkedIn: https://www.linkedin.com/in/ssrdjan/
 - X: https://x.com/djidja8
-- Blog: https://blogo.timek.deno.net
+- Blog: https://blogo.timek.deno.dev
 
 ## Repository Overview
 
-This is a single-file HTML presentation repository for a lightning talk titled **"Teaching Your AI Agent the Art of Knowing Nothing (Sometimes)"** by Srdjan Strbanovic. The presentation is a fully self-contained HTML file with embedded CSS and JavaScript, designed to run in any modern browser without external dependencies.
+This is a **modular, Markdown-driven HTML presentation** repository for a lightning talk titled **"Teaching Your AI Agent the Art of Knowing Nothing (Sometimes)"** by Srdjan Strbanovic.
 
 **Talk Abstract**: A practical framework for building AI agents that know when to admit uncertainty, escalate appropriately, and avoid the pitfalls of overconfidence. Uses the "Intern Test" metaphor to teach responsible AI agent design with clear decision boundaries and escalation paths.
 
-## Project Structure
+## Architecture
+
+### Modular Slide System
+
+The project has evolved from a single-file HTML presentation into a modular architecture where:
+
+1. **Slides are Markdown files** - Each slide is a separate `.md` file in `/slides/`
+2. **Runtime rendering** - JavaScript fetches and parses Markdown into HTML at runtime
+3. **Centralized theming** - CSS custom properties in `theme.css` define all visual styles
+4. **Static file server** - Deno serves the presentation and assets via `main.ts`
+
+```
+presentation.html      # Generic presentation engine (HTML skeleton + JS)
+    ↓
+theme.css             # CSS custom properties (colors, fonts, spacing, animations)
+    ↓
+slides/manifest.json  # Ordered list of slide filenames
+    ↓
+slides/*.md           # Individual slide content in Markdown
+```
+
+**Key architectural decisions:**
+
+- **Separation of concerns**: Content (Markdown), styling (CSS), and behavior (JavaScript) are fully decoupled
+- **Runtime parsing**: Slides are fetched and parsed client-side, enabling hot content updates without rebuilding
+- **Zero build step**: No bundlers, transpilers, or compilation required
+- **Portable deployment**: Can run on any static file server or Deno Deploy
+
+### File Structure
 
 ```
 /
-├── main.ts         # Deno server entry point
-├── deno.json       # Deno configuration
-├── index.html      # Complete standalone presentation
-├── CLAUDE.md       # This file
-└── README.md       # Project documentation
+├── main.ts                      # Deno HTTP server (entry point)
+├── deno.json                    # Deno tasks and deploy config
+├── presentation.html            # Minimal HTML shell (34 lines, 1.2KB)
+├── theme.css                    # All CSS styles (222 lines, 4.2KB)
+├── assets/
+│   └── lib/
+│       └── presentation.js      # All JavaScript logic (255 lines, 7.9KB)
+├── slides/
+│   ├── manifest.json            # Slide order (array of filenames)
+│   ├── 01-title.md              # Individual slide content
+│   ├── 02-outline.md
+│   └── ...
+├── generate-index.ts            # Legacy generator for single-file HTML
+├── CLAUDE.md                    # This file
+└── README.md                    # User-facing documentation
 ```
 
-## Technology Stack
+**Recent refactoring (2025-10-01):**
+- Removed 3 unused files: `index-old.html`, `index.html.bak`, `create-index.sh`
+- Extracted inline CSS from `presentation.html` to `theme.css` (single source of truth)
+- Extracted inline JavaScript to external module `assets/lib/presentation.js`
+- Reduced `presentation.html` from 152 lines to 34 lines (78% reduction)
+- Better separation of concerns: HTML structure, CSS styles, JS behavior now fully decoupled
 
-- **Pure HTML5**: Semantic markup with accessibility features (ARIA labels, screen reader support)
-- **Modern CSS**:
-  - CSS custom properties (CSS variables) for theming
-  - CSS animations and transitions
-  - View Transitions API support
-  - Container queries for responsive layout
-  - Gradient text effects using `background-clip`
-- **Vanilla JavaScript**: No frameworks or external dependencies
-  - ES6+ features (arrow functions, const/let, template literals)
-  - Event delegation and custom keyboard/touch navigation
-  - Deep-linking with hash-based routing
-  - Clipboard API integration
-  - LocalStorage for speaker notes persistence
+### Technology Stack
 
-## Key Architectural Patterns
+- **Runtime**: Deno (native TypeScript, Web Standards)
+- **Server**: Deno's built-in HTTP server via `Deno.serve()`
+- **Content Format**: Markdown with custom extensions (`{.fragment}` for progressive reveal)
+- **Styling**: Modern CSS with:
+  - CSS Custom Properties (theming)
+  - `color-mix()` for dynamic color blending
+  - Container queries
+  - `backdrop-filter` for glass morphism effects
+  - `clamp()` for fluid typography
+- **JavaScript**: Vanilla ES6+ (no frameworks or dependencies)
+  - Fetch API for loading slides
+  - Custom Markdown parser (no external library)
+  - Hash-based routing for deep linking
+  - Event delegation for navigation
 
-### Self-Contained Design
-The entire presentation exists in a single HTML file with no external dependencies. All styles are in `<style>` tags, all scripts in `<script>` tags, and all content is inline. This makes the presentation highly portable and eliminates network dependencies.
+## Common Development Commands
 
-### Slide Navigation System
-- **Slide State Management**: Uses a simple index-based state machine (`currentSlide`)
-- **CSS-Based Transitions**: Slides use CSS classes (`active`, `prev`) for positioning and opacity transitions
-- **Multiple Navigation Methods**:
-  - Keyboard: Arrow keys, Space, Home, End, H (help), S (speaker notes)
-  - Touch: Swipe gestures for mobile
-  - Mouse: Click left/right thirds of screen
-  - Direct: Click progress dots to jump to specific slides
+### Running the Server
 
-### Fragment Revealing System
-Implements a progressive disclosure pattern where list items and content boxes can be revealed step-by-step within a slide:
-- `fragmentsBySlide[]`: Arrays of fragment elements per slide
-- `fragmentIndexBySlide[]`: Current reveal index per slide
-- Auto-detects content that should be fragmented based on slide titles
-
-### View Transitions API Integration
-Uses the experimental View Transitions API when available for smoother slide transitions with a fallback to immediate updates in unsupported browsers.
-
-### Speaker Notes Architecture
-- Inline speaker notes stored in JavaScript object
-- Toggle overlay with 'S' key
-- Shows current slide number, title, and contextual notes
-- Useful for presenting or rehearsing
-
-## Quick Start
-
-### Using Deno (Recommended)
 ```bash
+# Development mode (with file watching)
 deno task dev
-# Visit: http://localhost:8000
+
+# Production mode (no watch)
+deno task start
 ```
 
-### Direct Browser Access
+Server runs on `http://localhost:8000` by default.
+
+### Deploying to Deno Deploy
+
 ```bash
-open index.html
+# Via deployctl CLI
+deno install -A --global jsr:@deno/deployctl
+deployctl deploy
+
+# Via GitHub integration
+# 1. Push to GitHub
+# 2. Connect repo at https://dash.deno.com/new
+# 3. Select main.ts as entry point
 ```
 
-### Alternative: Python Server
+### Regenerating Legacy Single-File HTML
+
 ```bash
-python3 -m http.server 8000
-# Visit: http://localhost:8000
+deno run --allow-write generate-index.ts
 ```
 
-**Navigation Controls**:
-- **Next slide**: → (right arrow), Space, or click right side of screen
-- **Previous slide**: ← (left arrow) or click left side of screen
-- **Jump to slide**: Click progress dots at bottom
-- **Help**: Press `H`
-- **Speaker notes**: Press `S`
-- **First/Last slide**: Home/End keys
-- **Mobile**: Swipe left/right
+This generates a standalone `index.html` with all CSS/JS inlined (useful for email distribution or offline use).
 
-## Common Development Tasks
+## Slide Authoring
 
-### Editing Slides
+### Markdown Syntax
 
-**Slide Structure**: Each slide is a `<div class="slide">` containing:
-- A heading (`<h1>`, `<h2>`, or `<h3>`)
-- Content (paragraphs, SVG diagrams, code blocks, examples)
-- Optional fragments (elements with `.fragment` class for progressive reveal)
+Each slide is a `.md` file supporting:
 
-**To add a new slide**:
-1. Add a new `<div class="slide">` before the closing `</div>` of `.presentation`
-2. Include heading and content
-3. Add speaker notes in the `buildNotes()` function
-4. Progress dots auto-generate from slide count
-
-**To modify speaker notes**: Edit the `buildNotes()` function inside the final `<script>` tag:
-```javascript
-setNote('Slide Title Substring', 'Your note text here.');
+**Headings:**
+```markdown
+# H1 (large title)
+## H2 (section heading)
+### H3 (subsection)
 ```
 
-**Available slide content components**:
-- `.code-block` - Code samples with dark background
-- `.example` - Real-world scenario callouts (pink border)
-- `.box` - Content containers (use with `.success`, `.warning`, `.danger` modifiers)
-- `.split-content` - Two-column responsive grid
-- `.rules-container` - Grid layout for rule cards
-- SVG graphics - Inline diagrams (no external files)
+**Lists with progressive reveal:**
+```markdown
+- Item revealed immediately
+- Another item {.fragment}
+- This appears on next keypress {.fragment}
+```
 
-### Theming
+**Code blocks:**
+````markdown
+```
+Your code here
+Will have a "Copy" button auto-added
+```
+````
 
-**CSS Custom Properties** (defined in `:root`):
-- `--primary`: #6366f1 (indigo) - Main brand color
-- `--secondary`: #ec4899 (pink) - Accent color
-- `--success`: #10b981 (green) - Positive states
-- `--warning`: #f59e0b (amber) - Caution states
-- `--danger`: #ef4444 (red) - Error/alert states
-- `--bg`: #0f172a (dark slate) - Background
-- `--text`: #f1f5f9 (light slate) - Primary text
-- `--text-dim`: #94a3b8 (muted slate) - Secondary text
+**Raw HTML:** Full HTML is supported for complex layouts, SVG diagrams, or custom styling:
+```html
+<div class="split">
+  <div>Column 1</div>
+  <div>Column 2</div>
+</div>
+```
 
-**Animation Keyframes**:
-- `fadeInUp` - Content appearing from below (800ms)
-- `slideInRight` - Elements sliding from right (800ms)
-- `slideInLeft` - Elements sliding from left (600ms)
-- `bounce` - Continuous vertical bounce (2s loop)
-- `pulse` - Opacity pulsing (2s loop)
+**Speaker notes:** Add at the end of any slide:
+```markdown
+<!-- NOTES: Your private notes here (shown when pressing 'S' key) -->
+```
 
-## Presentation Content Overview
+### Adding a New Slide
 
-The talk covers a framework for building responsible AI agents using three core rules:
+1. Create a new `.md` file in `/slides/` (e.g., `16-new-slide.md`)
+2. Add the filename to `/slides/manifest.json` in the desired position:
+   ```json
+   [
+     "01-title.md",
+     "02-outline.md",
+     "16-new-slide.md"
+   ]
+   ```
+3. Refresh the browser - slides are loaded dynamically at runtime
+
+### Slide Ordering
+
+The `slides/manifest.json` file is the **single source of truth** for slide order. The array position determines the sequence.
+
+## Custom Markdown Extensions
+
+The custom parser in `assets/lib/presentation.js` handles:
+
+- **Fragment markers**: `{.fragment}` at end of list items
+- **Speaker notes**: `<!-- NOTES: ... -->` comments
+- **HTML passthrough**: Lines starting with `<` are rendered as-is
+- **Auto-linking**: `[text](url)` converted to `<a>` tags
+- **Code blocks**: Triple backticks become `<pre><code>` with copy button
+
+## Navigation System
+
+### User Controls
+
+- **Keyboard**: `→` `←` `Space` `Home` `End` `H` (help) `S` (speaker notes)
+- **Mouse**: Click left/right thirds of screen
+- **Touch**: Swipe left/right on mobile
+- **Direct**: Click progress dots at bottom
+- **Deep linking**: URL hash `#5` jumps to slide 5
+
+### Fragment System
+
+Elements with `.fragment` class are hidden initially and revealed progressively:
+
+1. JavaScript collects all `.fragment` elements per slide on load
+2. Arrow/Space keys reveal next fragment before advancing slide
+3. Reverse navigation hides fragments in reverse order
+4. Fragment state is tracked per-slide in `state.fragIdx[]`
+
+## Theming and Styling
+
+### CSS Custom Properties
+
+All visual styling is controlled via CSS variables in `theme.css`:
+
+**Colors:**
+```css
+--primary: #818cf8    /* Indigo (main brand) */
+--secondary: #f472b6  /* Pink (accents) */
+--success: #34d399    /* Green (positive) */
+--warning: #fbbf24    /* Amber (caution) */
+--danger: #f87171     /* Red (alerts) */
+--bg: #0a0e1a         /* Dark slate background */
+--text: #ffffff       /* Primary text */
+--text-dim: #cbd5e1   /* Secondary text */
+--glass: color-mix(...)  /* Glassmorphism background */
+```
+
+**Typography:**
+```css
+--font-ui: system-ui, ...      /* UI font stack */
+--font-mono: ui-monospace, ... /* Code font stack */
+```
+
+**Animation:**
+```css
+--dur-fast: 200ms
+--dur: 600ms
+--easing: cubic-bezier(0.4, 0, 0.2, 1)
+```
+
+### Responsive Design
+
+- **Fluid typography**: Uses `clamp()` for min/max/preferred sizing
+  ```css
+  font-size: clamp(1.05rem, 2.5vw, 1.3rem)
+  ```
+- **Container queries**: Layout adapts based on container width (not viewport)
+- **Touch targets**: Minimum 48px for mobile accessibility
+- **Reduced motion**: Respects `prefers-reduced-motion` user preference
+
+## Server Architecture
+
+### main.ts Request Handling
+
+```typescript
+Deno.serve(async (req: Request) => {
+  const url = new URL(req.url);
+  const path = decodeURIComponent(url.pathname);
+
+  // Root → presentation.html (or fallback to index.html)
+  if (path === "/" || path === "/index.html") {
+    try {
+      return await serveFile(req, "./presentation.html");
+    } catch { /* fallback to legacy */ }
+  }
+
+  // All other paths → static assets (theme.css, slides/*.md, etc.)
+  const fsPath = "." + (path === "/" ? "/presentation.html" : path);
+  return await serveFile(req, fsPath);
+});
+```
+
+**Security note**: Path is normalized to prevent directory traversal attacks.
+
+### Permissions
+
+The server requires:
+- `--allow-net`: HTTP server binding
+- `--allow-read`: File system reads for static assets
+
+## Testing Checklist
+
+When making changes, verify:
+
+**Core Functionality:**
+- [ ] All slides render with correct styling
+- [ ] Navigation works (keyboard, mouse, touch, progress dots)
+- [ ] Deep linking (`#N` URLs) jumps to correct slide
+- [ ] Fragments (`.fragment` items) reveal step-by-step
+
+**Features:**
+- [ ] Help overlay (H key) displays shortcuts
+- [ ] Speaker notes (S key) show `<!-- NOTES: ... -->` content
+- [ ] Copy buttons appear on code blocks
+- [ ] Copy to clipboard works (requires HTTPS or localhost)
+
+**Cross-Browser:**
+- [ ] Chrome/Edge (primary target)
+- [ ] Firefox
+- [ ] Safari
+
+**Responsive:**
+- [ ] Desktop (1920px+)
+- [ ] Tablet (768px-1024px)
+- [ ] Mobile (320px-768px)
+
+**Accessibility:**
+- [ ] Screen reader announces slide changes
+- [ ] Keyboard navigation complete (no mouse required)
+- [ ] Contrast ratios meet WCAG AA
+- [ ] Reduced motion respected
+
+## Content Overview
+
+The presentation teaches a 3-rule framework for AI agent design:
 
 1. **Rule 1: No Cape, No Crime** - Full autonomy for low-stakes, documented scenarios
 2. **Rule 2: Show Your Work** - Propose & confirm for medium-stakes decisions
 3. **Rule 3: Escalate Like a Pro** - Immediate escalation for high-stakes situations
 
-The presentation includes:
+Includes:
 - The "Intern Test" metaphor
 - Real-world examples and anti-patterns
-- A copy-pasteable prompt template
+- Copy-pasteable prompt template
 - Before/after metrics
-- Actionable next steps
+- 3 actionable next steps
 
-## Technical Constraints & Features
+## Key Gotchas
 
-### Core Principles
-- **Zero Build Process**: Single HTML file, no compilation or bundling required
-- **Zero Dependencies**: No npm packages, no CDN links, fully offline-capable
-- **Maximum Portability**: Can be emailed, shared via USB, or hosted anywhere
+1. **Copy buttons require HTTPS or localhost** - Clipboard API security restriction
+2. **Manifest order matters** - `slides/manifest.json` array position determines sequence
+3. **Fragment syntax is strict** - Must be `{.fragment}` exactly (no spaces inside braces)
+4. **Speaker notes are HTML comments** - Must use `<!-- NOTES: ... -->` format
+5. **Path normalization** - Server prevents directory traversal, so all paths are relative to project root
 
-### Browser Support
-- **Minimum**: Modern browsers from 2022+ (Chrome/Edge/Firefox/Safari)
-- **View Transitions API**: Used when available, gracefully degrades
-- **Clipboard API**: Copy buttons require HTTPS or localhost for security reasons
+## Architecture Evolution
 
-### Built-in Features
-- **Deep Linking**: Share specific slides with `#slide-N` URLs (e.g., `#slide-5`)
-- **Keyboard Shortcuts**: Full keyboard navigation (arrows, space, H, S, Home, End)
-- **Touch Gestures**: Swipe support for mobile/tablet devices
-- **Speaker Notes**: Toggle with S key, hidden from audience view
-- **Help Overlay**: Press H for keyboard shortcut reference
-- **Accessibility**: ARIA labels, semantic HTML, screen reader support, reduced motion support
-- **Responsive Design**: Container queries and fluid typography adapt to screen size
+**Phase 1 (Original):** Single-file `index.html` with all HTML, CSS, and JavaScript inline (~50KB, 1000+ lines)
 
-## Extension Patterns
+**Phase 2 (Markdown):** Modular system with slides as Markdown files, but still embedded CSS/JS in HTML
 
-### Progressive Reveal (Fragments)
-Add step-by-step reveals within a slide by adding the `.fragment` class:
-```html
-<div class="list-item fragment">Step 1: First point</div>
-<div class="list-item fragment">Step 2: Second point</div>
-```
-Use arrow/space keys to reveal each fragment before advancing to next slide.
+**Phase 3 (Current - 2025-10-01):** Fully separated concerns:
+- `presentation.html` - Pure HTML structure (34 lines)
+- `theme.css` - All styles in one place (222 lines)
+- `assets/lib/presentation.js` - All behavior isolated (255 lines)
+- `slides/*.md` - Content only
 
-### Custom Interactive Elements
-Build on existing patterns:
-- **Diagrams**: Use inline SVG (no external files) with CSS custom properties for colors
-- **Code Samples**: `.code-block` with monospace font and syntax-colored text
-- **Callouts**: `.box` containers with state modifiers (`.success`, `.warning`, `.danger`)
-- **Two-Column**: `.split-content` grid (auto-collapses on mobile via container queries)
-- **Copy-to-Clipboard**: Add `data-copy` to button and `data-copy-source` to content
+**Benefits of current architecture:**
+- **Maintainability**: Edit styles/behavior without touching HTML
+- **Caching**: Browser caches CSS/JS separately from HTML
+- **Reusability**: Can reuse `presentation.js` engine for other slide decks
+- **Debugging**: Clear separation makes troubleshooting easier
+- **Testing**: Can unit test JavaScript module independently
+- **Performance**: Parallel downloads of HTML, CSS, JS assets
 
-### Responsive Typography
-Uses modern CSS techniques:
-- `clamp()` for fluid sizing: `font-size: clamp(1rem, 1.3vw + .6rem, 1.5rem)`
-- Container queries for layout adaptation (not viewport-based)
-- Touch-friendly tap targets (48px minimum)
-- Flexible SVG with `viewBox` and `max-width`
+## Performance Considerations
 
-## Testing & Quality Assurance
-
-### Pre-Delivery Checklist
-When modifying the presentation, verify:
-
-**Navigation & Interaction**:
-- [ ] Keyboard navigation (arrows, space, Home, End)
-- [ ] Mouse click navigation (left/right screen thirds)
-- [ ] Touch gestures on mobile/tablet (swipe left/right)
-- [ ] Progress dots (click to jump to slides)
-- [ ] Deep-linking with `#slide-N` URLs
-
-**Overlays & Features**:
-- [ ] Help overlay (H key) opens and closes correctly
-- [ ] Speaker notes (S key) toggle with proper content
-- [ ] Copy-to-clipboard buttons function (requires HTTPS or localhost)
-- [ ] Fragment progressive reveals work as expected
-
-**Cross-Browser & Accessibility**:
-- [ ] Test in Chrome, Firefox, Safari (and Edge if possible)
-- [ ] Verify with screen reader (VoiceOver on Mac, NVDA on Windows)
-- [ ] Check reduced motion preference honors user settings
-- [ ] Validate contrast ratios meet WCAG AA standards
-- [ ] Ensure all interactive elements are keyboard accessible
-
-**Responsive Design**:
-- [ ] Test on desktop (1920px+)
-- [ ] Test on tablet (768px-1024px)
-- [ ] Test on mobile (320px-768px)
-- [ ] Verify text remains readable at all sizes
-- [ ] Check touch targets are minimum 48px
-
-### Common Issues & Solutions
-
-**Issue**: Copy buttons don't work
-- **Solution**: Serve via HTTPS or localhost (Clipboard API restriction)
-
-**Issue**: View transitions feel jarring
-- **Solution**: User may have `prefers-reduced-motion` enabled (this is correct behavior)
-
-**Issue**: SVG icons not visible
-- **Solution**: Check SVG `fill` attributes use CSS custom properties (`var(--primary)`)
-
-**Issue**: Fragments reveal all at once
-- **Solution**: Ensure `.fragment` class is present and `initFragments()` detects the slide type
+- **Cold start**: Deno Deploy optimized for fast cold starts
+- **Asset loading**: Slides fetched in sequence (not parallel) to maintain order
+- **Caching**: No explicit cache headers (relies on browser defaults)
+- **Bundle size**: No bundling step; assets loaded on-demand
+- **Client-side parsing**: Markdown parsing happens in browser (minimal overhead)

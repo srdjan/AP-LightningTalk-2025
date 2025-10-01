@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+#!/usr/bin/env -S deno run --allow-write
+
+// Generate modern, semantic HTML presentation with fancy CSS
+
+const cssHead = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -17,15 +21,17 @@
   </style>
 </head>
 <body>
-  <main>
-    <section class="active">
+  <main>`;
+
+const slides = [
+  `    <section class="active">
       <h1>Teaching Your AI Agent<br>the Art of Knowing Nothing</h1>
       <p class="subtitle">(Sometimes)</p>
       <div class="emoji">🤖</div>
       <p>A practical guide to building AI that doesn't pretend to be smarter than it is</p>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <h2>What We'll Cover</h2>
       <div class="grid">
         <div class="list-item">1️⃣ The Intern Test</div>
@@ -36,9 +42,9 @@
         <div class="list-item">6️⃣ Real Results</div>
         <div class="list-item">7️⃣ 3 Actions to take</div>
       </div>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <h2>Hi, I'm Srdjan Strbanovic 👋</h2>
       <div class="split">
         <div style="text-align:left">
@@ -67,9 +73,9 @@
           </div>
         </div>
       </div>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <h2>The Intern Test 🤔</h2>
       <div class="split">
         <div class="card" style="border-color:var(--danger)">
@@ -82,9 +88,9 @@
         </div>
       </div>
       <p style="margin-top:2rem;font-size:1.8rem">Which intern are you keeping?</p>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <h2>The Problem: Over-Confidence Is Expensive 💸</h2>
       <div class="card" style="text-align:center;max-width:800px;border-color:var(--danger)">
         <div class="emoji" style="font-size:4rem">😱</div>
@@ -96,9 +102,9 @@
         <div class="card text-danger">❌ Lost Customer</div>
         <div class="card text-danger">❌ $10K Gone</div>
       </div>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <h2>Rule 1: No Cape, No Crime ✅</h2>
       <div class="card" style="max-width:900px">
         <div class="emoji">✅</div>
@@ -106,9 +112,9 @@
         <p style="text-align:left;font-size:1.3rem;line-height:1.8">When to let the agent run free:<br><br>✓ Clearly documented (FAQ answers)<br>✓ Low stakes (no money, no legal stuff)<br>✓ Easily reversible (no harm if wrong)<br>✓ If outside scope → say "I don't know" and escalate</p>
       </div>
       <div class="code" style="margin-top:2rem"><strong class="text-success">Example:</strong><br>Customer: "What are your business hours?"<br>Agent: "We're open Monday-Friday, 9am-5pm EST!"<br><br><em class="text-success">✓ Can't mess this up</em></div>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <h2>Rule 2: Show Your Work 📝</h2>
       <div class="card" style="max-width:900px">
         <div class="emoji">📝</div>
@@ -116,9 +122,9 @@
         <p style="text-align:left;font-size:1.3rem;line-height:1.8">When the agent should draft but ask:<br><br>✓ Medium stakes (some money, but reversible)<br>✓ Needs personalization<br>✓ Should be verified</p>
       </div>
       <div class="code" style="margin-top:2rem"><strong class="text-warning">Example:</strong><br>Agent to You: "Customer qualifies for refund. I drafted this message—look good?"<br><br><em class="text-success">✓ Agent did 90% of the work</em></div>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <h2>Rule 3: Escalate Like a Pro 🚨</h2>
       <div class="card" style="max-width:900px">
         <div class="emoji">🚨</div>
@@ -126,21 +132,21 @@
         <p style="text-align:left;font-size:1.3rem;line-height:1.8">When to call for backup:<br><br>🚨 High stakes (money, legal, brand)<br>🚨 Irreversible (can't undo)<br>🚨 Emotionally charged (customer upset)<br>🚨 Policy exceptions needed</p>
       </div>
       <div class="code" style="margin-top:2rem"><strong class="text-danger">Example:</strong><br>"🚨 High-value customer ($45K) expressing frustration. Wants full cancellation. This needs YOU ASAP."<br><br><em class="text-success">✓ Agent recognized it's in over its head</em></div>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <h2>How to Actually Build This 🛠️</h2>
       <div class="code" style="max-width:900px">Before responding, ask yourself:<br><br><span class="text-success">1. CONFIDENCE CHECK</span><br>   - Am I 80%+ sure about this?<br>   - If not → SAY SO<br><br><span class="text-warning">2. WHAT'S AT STAKE?</span><br>   - Can this be undone?<br>   - Money involved?<br><br><span class="text-danger">3. DECISION TREE</span><br>   - Low stakes + High confidence = GO<br>   - Medium = Draft & ask<br>   - High = Escalate with context</div>
       <p style="margin-top:2rem">Modern LLMs can follow these instructions! 🎉</p>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <h2>A Real Prompt That Works 📋</h2>
       <button class="btn" onclick="copyPrompt()">📋 Copy Full Prompt</button>
       <div class="code" id="prompt" style="margin-top:1.5rem;font-size:1rem">You are a customer support agent. Before responding:<br><br><span class="text-success">1. ASSESS YOUR CONFIDENCE (0-100)</span><br>   - Do I have verified information about this?<br>   - Am I certain about company policy here?<br><br><span class="text-warning">2. CHECK THE STAKES</span><br>   - Money involved? (>$100 = medium, >$500 = high)<br>   - Can this be reversed if wrong?<br>   - Is customer showing frustration?<br><br><span class="text-danger">3. DECIDE & ACT</span><br>   - If confidence >80% AND low stakes → Respond directly<br>   - If confidence 60-80% OR medium stakes → Draft response, prefix with<br>     "[DRAFT - Please review:] ..."<br>   - If confidence &lt;60% OR high stakes → Output:<br>     "[ESCALATE] Reason: ... | Context: ... | Suggested action: ..."<br><br><span class="highlight">Always explain your reasoning briefly in your response.</span></div>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <h2>Why This Makes Your Life Better 🎯</h2>
       <div class="grid">
         <div class="card">
@@ -159,9 +165,9 @@
           <p>Instant simple answers<br>Human help when needed<br>Never lost in AI</p>
         </div>
       </div>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <h2>Real Results 📈</h2>
       <div style="display:grid;gap:2rem;max-width:800px">
         <div class="card">
@@ -183,17 +189,17 @@
           <div class="text-success" style="font-size:2rem">30% Agent Productivity Gain</div>
         </div>
       </div>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <div class="emoji">🎯</div>
       <h2>The Punchline</h2>
       <p style="font-size:2rem;margin:2rem 0">The best interns aren't the ones who know everything</p>
       <p style="font-size:1.8rem;color:var(--secondary)">They're the ones who know when to ask for help</p>
       <div style="display:flex;align-items:center;justify-content:center;gap:2rem;margin-top:3rem;font-size:4rem"><div>🤖</div><div class="highlight">+</div><div>👤</div></div>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <h2>Three Things to Try This Week 🚀</h2>
       <div style="max-width:900px">
         <div class="card" style="border-color:var(--success);margin-bottom:1.5rem"><strong style="font-size:1.6rem;color:var(--success)">1. Add Confidence Check</strong><br><p style="margin-top:0.5rem">"Rate your confidence 0-100 before answering"</p></div>
@@ -201,15 +207,17 @@
         <div class="card" style="border-color:var(--danger)"><strong style="font-size:1.6rem;color:var(--danger)">3. Build One Escalation Path</strong><br><p style="margin-top:0.5rem">Teach agent to recognize ONE scenario needing help</p></div>
       </div>
       <p style="margin-top:2rem;font-size:1.3rem;color:var(--text-dim)">Start small. Build trust. Scale with data. 📊</p>
-    </section>
+    </section>`,
 
-    <section>
+  `    <section>
       <div class="emoji">💡</div>
       <h1 style="font-size:2.8rem">The Smartest Thing Your AI Can Say</h1>
       <p style="font-size:2.5rem;margin:3rem 0;color:var(--secondary)">"I don't know, let me get you someone who does."</p>
       <p style="font-size:1.5rem;color:var(--text-dim)">Questions? Let's chat! 🎤</p>
-    </section>
-  </main>
+    </section>`,
+];
+
+const jsFooter = `  </main>
   <nav aria-label="Slide navigation"></nav>
   <dialog id="help">
     <h3>⌨️ Keyboard Shortcuts</h3>
@@ -227,9 +235,9 @@
   <div id="announcer" class="sr-only" aria-live="polite"></div>
   <script>
     const slides=document.querySelectorAll('section'),nav=document.querySelector('nav'),help=document.getElementById('help'),announcer=document.getElementById('announcer');let current=0;
-    slides.forEach((_,i)=>{const dot=document.createElement('button');dot.className='dot';dot.ariaLabel=`Go to slide ${i+1}`;if(i===0)dot.classList.add('active');dot.onclick=()=>goTo(i);nav.appendChild(dot)});
+    slides.forEach((_,i)=>{const dot=document.createElement('button');dot.className='dot';dot.ariaLabel=\`Go to slide \${i+1}\`;if(i===0)dot.classList.add('active');dot.onclick=()=>goTo(i);nav.appendChild(dot)});
     const dots=nav.querySelectorAll('.dot');
-    function goTo(n){if(n<0||n>=slides.length)return;slides[current].classList.remove('active');slides[current].classList.add('prev');dots[current].classList.remove('active');current=n;slides[current].classList.remove('prev');slides[current].classList.add('active');dots[current].classList.add('active');history.replaceState(null,'',`#${current+1}`);const title=slides[current].querySelector('h1, h2')?.textContent||`Slide ${current+1}`;announcer.textContent=`${title}, slide ${current+1} of ${slides.length}`;document.title=`${title} - AI Agent Talk`}
+    function goTo(n){if(n<0||n>=slides.length)return;slides[current].classList.remove('active');slides[current].classList.add('prev');dots[current].classList.remove('active');current=n;slides[current].classList.remove('prev');slides[current].classList.add('active');dots[current].classList.add('active');history.replaceState(null,'',\`#\${current+1}\`);const title=slides[current].querySelector('h1, h2')?.textContent||\`Slide \${current+1}\`;announcer.textContent=\`\${title}, slide \${current+1} of \${slides.length}\`;document.title=\`\${title} - AI Agent Talk\`}
     function next(){goTo(current+1)}function prev(){goTo(current-1)}
     document.addEventListener('keydown',e=>{if(e.target.tagName==='DIALOG')return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next()}else if(e.key==='ArrowLeft'){e.preventDefault();prev()}else if(e.key==='Home'){e.preventDefault();goTo(0)}else if(e.key==='End'){e.preventDefault();goTo(slides.length-1)}else if(e.key.toLowerCase()==='h'){e.preventDefault();help.showModal()}else if(e.key==='Escape'&&help.open){help.close()}});
     document.addEventListener('click',e=>{if(e.target.closest('nav, dialog, button, a'))return;const x=e.clientX,w=window.innerWidth;if(x>w*0.7)next();else if(x<w*0.3)prev()});
@@ -238,4 +246,24 @@
     function copyPrompt(){const text=document.getElementById('prompt').innerText;navigator.clipboard.writeText(text).then(()=>{event.target.textContent='✅ Copied!';setTimeout(()=>event.target.textContent='📋 Copy Full Prompt',2000)})}
   </script>
 </body>
-</html>
+</html>`;
+
+const html = cssHead + '\n' + slides.join('\n\n') + '\n' + jsFooter;
+
+await Deno.writeTextFile('index.html', html);
+
+console.log('✅ Generated modern index.html');
+console.log(`📦 Total size: ${(new Blob([html]).size / 1024).toFixed(1)}KB`);
+console.log(`🎨 ${slides.length} slides created`);
+console.log('\n🎉 Modern features included:');
+console.log('   • CSS Cascade Layers (@layer)');
+console.log('   • Container Queries (@container)');
+console.log('   • color-mix() function');
+console.log('   • Glass morphism effects');
+console.log('   • 3D perspective transforms');
+console.log('   • Animated gradient backgrounds');
+console.log('   • Spinning avatar borders');
+console.log('   • Neon glow effects');
+console.log('   • Semantic HTML5');
+console.log('   • No speaker notes');
+console.log('   • Minified CSS & JS');

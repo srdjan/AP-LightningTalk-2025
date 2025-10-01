@@ -1,8 +1,8 @@
-# Teaching Your AI the Art of Knowing Less
+# Teaching AI the Art of Knowing Less
 
 (... at least sometimes)
 
-A practical guide to building AI that doesn't pretend to be smarter than it is
+A practical guide to ensure AI doesn't pretend to be smarter than it is
 
 <div id="theme-switcher" style="margin-top: 2rem; display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; align-items: center;">
   <span style="font-size: 0.9rem; opacity: 0.7;">Theme:</span>

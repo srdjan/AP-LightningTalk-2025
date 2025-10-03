@@ -123,34 +123,58 @@ li {
 
 /* Code blocks */
 pre {
-  max-width: 900px;
-  background: color-mix(in srgb, black 50%, var(--bg));
-  padding: 1rem;
+  max-width: 1000px;
+  background: #1e1e1e !important;
+  padding: 1.5rem !important;
   border-radius: 1rem;
   border-left: 4px solid var(--success);
   overflow: auto;
+  margin: 1.5rem auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 code {
-  font-family: var(--font-mono);
-  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  font-family: 'JetBrains Mono', 'Fira Code', var(--font-mono);
+  font-size: clamp(0.85rem, 1.8vw, 1rem);
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Inline code (not in pre) */
+:not(pre) > code {
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.3rem;
+  font-size: 0.9em;
 }
 
 .copy-btn {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  padding: 0.35rem 0.6rem;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 0.75rem;
   border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
-  border-radius: 0.4rem;
-  background: var(--glass);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(8px);
   color: var(--text);
+  font-size: 0.85rem;
   cursor: pointer;
+  transition: all var(--dur-fast) var(--easing);
+  z-index: 10;
+}
+
+.copy-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
 .code-wrap {
   position: relative;
-  display: inline-block;
+  display: block;
+  width: 100%;
 }
 
 /* Navigation */

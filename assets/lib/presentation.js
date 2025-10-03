@@ -173,7 +173,16 @@ function collectFragments() {
 }
 
 function enhanceCodeBlocks() {
-  // already added copy buttons while parsing; wire handler
+  // Apply syntax highlighting to all code blocks
+  document.querySelectorAll('pre code').forEach((block) => {
+    // Auto-detect language or default to typescript for this presentation
+    if (!block.className) {
+      block.className = 'language-typescript';
+    }
+    hljs.highlightElement(block);
+  });
+
+  // Wire up copy button handler
   document.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-copy]");
     if (!btn) return;

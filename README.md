@@ -1,7 +1,6 @@
-# Teaching Your AI Agent the Art of Knowing Nothing (Sometimes)
+# Lightning Talks by Srdjan Strbanovic
 
-A lightning talk presentation by Srdjan Strbanovic about building responsible AI
-agents that know when to admit uncertainty and escalate appropriately.
+A collection of lightning talk presentations about AI agents and prompt engineering.
 
 ## 🚀 Quick Start
 
@@ -11,7 +10,7 @@ agents that know when to admit uncertainty and escalate appropriately.
 deno task dev
 ```
 
-Visit http://localhost:8000 (or your chosen port)
+Visit http://localhost:8000 to see the **presentation selection homepage** where you can choose from available talks and select your preferred theme.
 
 ### Production Server
 
@@ -44,27 +43,40 @@ Or use the GitHub integration:
 
 ```
 .
-├── presentation.html          # HTML shell (entry)
+├── index.html                 # Homepage with presentation selector + theme switcher
+├── presentation.html          # Presentation viewer (generic, loads slides via query param)
+├── main.ts                    # Deno HTTP server (serves static assets)
 ├── assets/
 │   ├── lib/
-│   │   └── presentation.js    # Presentation engine (JS)
+│   │   └── presentation.js    # Presentation engine (navigation, rendering, themes)
 │   └── themes/
-│       └── theme.css          # Base theme variables/styles
+│       ├── theme.css          # Base theme variables/styles
+│       ├── dark.css           # Dark theme (default)
+│       ├── light.css          # Light theme
+│       ├── cyberpunk.css      # Cyberpunk theme
+│       ├── ocean.css          # Ocean theme
+│       ├── forest.css         # Forest theme
+│       └── sunset.css         # Sunset theme
 ├── slides/
-│   ├── manifest.json          # Slide order
-│   ├── 01-title.md
-│   └── ...
+│   ├── prompt-optimization/   # First presentation
+│   │   ├── manifest.json      # Slide order
+│   │   ├── 01-title.md
+│   │   └── ...
+│   └── effective-use-of-agents/ # Second presentation
+│       ├── manifest.json
+│       ├── 01-title.md
+│       └── ...
 ├── deno.json                  # Deno tasks and deploy config
-├── main.ts                    # Deno HTTP server (serves static assets)
 ├── README.md
 └── CLAUDE.md
 ```
 
 ## 🎯 Features
 
+- **Multi-presentation support**: Homepage lets you select from multiple talks
+- **Theme switcher**: 6 themes (dark, light, cyberpunk, ocean, forest, sunset) with localStorage persistence
 - **Zero build, no external dependencies**: Vanilla JS/CSS, no bundlers
-- **Modular, Markdown-driven slides**: One .md per slide, manifest-controlled
-  order
+- **Modular, Markdown-driven slides**: One .md per slide, manifest-controlled order
 - **Responsive**: Desktop, tablet, and mobile
 - **Interactive**: Keyboard, mouse, touch, and deep-linking
 - **Accessible**: ARIA, focus-visible outlines, screen reader announcements
@@ -79,22 +91,31 @@ Or use the GitHub integration:
 - **Speaker notes**: Press `S`
 - **First/Last**: Home/End keys
 
-## 📝 Content Overview
+## 📝 Available Presentations
 
-The presentation covers a framework for building responsible AI agents:
+### 1. Prompt Optimization 🎯
+**Teaching Your AI Agent the Art of Knowing Nothing (Sometimes)**
 
-1. **Rule 1: No Cape, No Crime** - Full autonomy for low-stakes scenarios
-2. **Rule 2: Show Your Work** - Propose & confirm for medium-stakes decisions
-3. **Rule 3: Escalate Like a Pro** - Immediate escalation for high-stakes
-   situations
+A framework for building responsible AI agents that know when to admit uncertainty and escalate appropriately.
 
-Includes:
-
+- Rule 1: No Cape, No Crime (full autonomy for low-stakes)
+- Rule 2: Show Your Work (propose & confirm for medium-stakes)
+- Rule 3: Escalate Like a Pro (immediate escalation for high-stakes)
 - The "Intern Test" metaphor
-- Real-world examples and anti-patterns
 - Copy-pasteable prompt template
-- Before/after metrics
-- Actionable next steps
+- Real-world metrics and examples
+
+### 2. Effective Use of Agents 🤖
+**Building Autonomous Systems That Actually Work**
+
+Core principles, practical patterns, and real-world examples for designing AI agents with the right level of autonomy, observability, and human oversight.
+
+- When (and when not) to use agents
+- The autonomy spectrum
+- Context management and effective prompting
+- Tool design and error handling
+- Testing strategies and antipatterns
+- Production deployment checklist
 
 ## 🔗 Connect
 
@@ -108,64 +129,81 @@ Includes:
 
 © 2025 Srdjan Strbanovic. All rights reserved.
 
-## 🧩 Modular Architecture (New)
+## 🧩 Architecture
 
-This project has been refactored from a single-file HTML into a modular,
-Markdown-driven deck.
+This project uses a **two-file architecture** for multi-presentation support:
 
-Structure:
+### 1. Homepage (`index.html`)
+**URL**: `http://localhost:8000/`
 
-```
-.
-├── presentation.html      # HTML shell (renders slides from /slides)
-├── assets/
-│   ├── lib/
-│   │   └── presentation.js   # All JS logic (engine)
-│   └── themes/
-│       └── theme.css         # Base theme variables/styles
-├── slides/                  # One Markdown file per slide
-│   ├── manifest.json        # Slide order
-│   ├── 01-title.md
-│   ├── 02-outline.md
-│   └── ...
-└── main.ts                  # Static file server (serves presentation + assets)
-```
+The landing page where users:
+- Browse available presentations via visual cards
+- Select a theme (6 options: dark, light, cyberpunk, ocean, forest, sunset)
+- Click a presentation card to launch it
 
-Slide authoring:
+Features:
+- Responsive grid layout with glassmorphism effects
+- Theme preference saved to `localStorage` as `"preferred-theme"`
+- Minimal, elegant design
 
-- Each slide is a `.md` file
-- Use `{.fragment}` at end of a list item to reveal progressively
-- Speaker notes: add an HTML comment at the bottom: `<!-- NOTES: ... -->`
-- Raw HTML is allowed for special layouts and inline SVG
+### 2. Presentation Viewer (`presentation.html`)
+**URL**: `http://localhost:8000/presentation.html?slides=FOLDER_NAME`
 
-Theme:
+A generic slide viewer that:
+- Reads the `?slides=` query parameter to determine which presentation to load
+- Fetches slides from `slides/FOLDER_NAME/manifest.json`
+- Applies the saved theme from `localStorage` on load
+- Provides navigation, fragments, speaker notes, and keyboard shortcuts
 
-- Edit colors, fonts, and animation variables in `assets/themes/theme.css`
+Examples:
+- `presentation.html?slides=prompt-optimization`
+- `presentation.html?slides=effective-use-of-agents`
 
-Run:
+**How they work together**:
+1. User visits `/` → sees homepage (`index.html`)
+2. User selects a theme and clicks a presentation card
+3. Browser navigates to `presentation.html?slides=FOLDER_NAME`
+4. Viewer loads that presentation's slides and applies the saved theme
 
-```bash
-# Dev server (default port 8000)
-deno task dev
+### Adding a New Presentation
 
-# Or choose a custom port (pass through extra args after --)
-deno task dev -- --port=8010
+1. **Create a folder** in `slides/`:
+   ```bash
+   mkdir slides/my-new-talk
+   ```
 
-# Then visit http://localhost:8000 (or your chosen port)
-```
+2. **Create slides** as Markdown files (`01-title.md`, `02-intro.md`, etc.)
+   - Use `{.fragment}` at end of list items for progressive reveal
+   - Add speaker notes: `<!-- NOTES: Your private notes -->`
+   - Raw HTML is allowed for custom layouts
 
-Deep links and navigation still work:
+3. **Create manifest.json**:
+   ```json
+   [
+     "01-title.md",
+     "02-intro.md",
+     "03-content.md"
+   ]
+   ```
 
-- `#N` to jump to slide N
-- Keyboard: ←/→, Space, Home/End, H (help), S (speaker notes)
-- Mouse thirds and touch swipe
+4. **Add to homepage** (`index.html`):
+   ```html
+   <a href="presentation.html?slides=my-new-talk" class="card">
+     <div class="card-content">
+       <span class="card-icon">🎤</span>
+       <h2>My New Talk</h2>
+       <p>Description here</p>
+       <div class="card-meta">
+         <span>10 slides</span>
+         <span>~15 min</span>
+       </div>
+     </div>
+   </a>
+   ```
 
-Testing checklist (post-refactor):
+### Theming
 
-- [ ] Slides render with styling
-- [ ] Keyboard/mouse/touch/progress dots/deep links function
-- [ ] Fragments (items with `{.fragment}`) reveal step-by-step
-- [ ] Speaker notes dialog shows `<!-- NOTES: ... -->`
-- [ ] Help overlay works (H)
-- [ ] Copy-to-clipboard button appears on code blocks
-- [ ] SVG and custom HTML layouts display properly
+- Edit base variables: `assets/themes/theme.css`
+- Create new themes by copying an existing theme file (e.g., `dark.css`)
+- All themes use CSS custom properties (`--primary`, `--bg`, `--text`, etc.)
+- Theme preference saved to localStorage as `"preferred-theme"`

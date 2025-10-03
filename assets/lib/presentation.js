@@ -17,9 +17,12 @@ const announcer = document.getElementById("announcer");
 const CLICK_LEFT_RATIO = 0.3, CLICK_RIGHT_RATIO = 0.7, SWIPE_THRESHOLD = 50;
 
 async function loadManifest() {
-  const res = await fetch("slides/manifest.json");
+  // Check if a specific presentation folder is specified via query param
+  const params = new URLSearchParams(window.location.search);
+  const folder = params.get('slides') || 'effective-use-of-agents';
+  const res = await fetch(`slides/${folder}/manifest.json`);
   if (!res.ok) throw new Error("manifest load failed");
-  return res.json();
+  return { folder, slides: await res.json() };
 }
 
 function parseMarkdown(md) {
@@ -126,9 +129,9 @@ function parseMarkdown(md) {
 }
 
 async function loadSlides() {
-  const files = await loadManifest();
+  const { folder, slides: files } = await loadManifest();
   for (const f of files) {
-    const res = await fetch(`slides/${f}`);
+    const res = await fetch(`slides/${folder}/${f}`);
     const md = await res.text();
     const { html, note } = parseMarkdown(md);
     const sec = document.createElement("section");
@@ -329,7 +332,7 @@ function initThemeSystem() {
   document.head.appendChild(themeLink);
 
   // Load saved theme or default to 'dark'
-  const savedTheme = localStorage.getItem("presentation-theme") || "dark";
+  const savedTheme = localStorage.getItem("preferred-theme") || "dark";
   loadTheme(savedTheme);
 
   // Setup theme button listeners (after slides load)
@@ -339,7 +342,7 @@ function initThemeSystem() {
         const theme = e.target.dataset.theme;
         if (theme) {
           loadTheme(theme);
-          localStorage.setItem("presentation-theme", theme);
+          localStorage.setItem("preferred-theme", theme);
         }
       });
     });

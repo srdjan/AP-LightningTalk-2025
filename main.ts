@@ -7,16 +7,13 @@ Deno.serve({ port: PORT }, async (req: Request) => {
   const url = new URL(req.url);
   const path = decodeURIComponent(url.pathname);
 
-  // Serve presentation entry at root
-  if (path === "/" || path === "/index.html") {
-    // Prefer modular entry
-    try {
-      return await serveFile(req, "./presentation.html");
-    } catch (_) { /* fall back to legacy if not found */ }
-    // Fallback to legacy single-file if present
+  // Serve homepage at root - always show presentation selection
+  if (path === "/") {
     try {
       return await serveFile(req, "./index.html");
-    } catch (_) { /* not found */ }
+    } catch (_) {
+      return new Response("Homepage not found", { status: 404 });
+    }
   }
 
   // Serve static assets (theme, slides, etc.)

@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AI Agent Talk — Modular</title>
     <link rel="stylesheet" href="./assets/themes/theme.css">
+    <script>
+      // Load saved theme immediately (before page render to prevent flash)
+      (function() {
+        const savedTheme = localStorage.getItem("preferred-theme") || "dark";
+        const link = document.createElement("link");
+        link.id = "active-theme";
+        link.rel = "stylesheet";
+        link.href = `./assets/themes/${savedTheme}.css`;
+        document.head.appendChild(link);
+      })();
+    </script>
   </head>
   <body>
     <main id="deck"></main>

@@ -1,0 +1,17 @@
+[
+  "01-title.md",
+  "02-outline.md",
+  "03-what-are-agents.md",
+  "04-when-to-use.md",
+  "05-core-principles.md",
+  "06-autonomy-spectrum.md",
+  "07-context-management.md",
+  "08-effective-prompting.md",
+  "09-tool-design.md",
+  "10-error-handling.md",
+  "11-testing-agents.md",
+  "12-real-world-examples.md",
+  "13-antipatterns.md",
+  "14-best-practices.md",
+  "15-next-steps.md"
+]

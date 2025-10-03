@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lightning Talks - Srdjan Strbanovic</title>
+  <link rel="stylesheet" href="assets/themes/theme.css">
+  <link rel="stylesheet" href="assets/themes/dark.css">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background:
+        radial-gradient(ellipse at 20% 30%, color-mix(in oklch, var(--primary) 15%, transparent) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, color-mix(in oklch, var(--secondary) 15%, transparent) 0%, transparent 50%),
+        var(--bg);
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      animation: fadeIn 1s var(--easing);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .theme-switcher {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      align-items: center;
+      margin: 2rem 0 3rem;
+      flex-wrap: wrap;
+    }
+
+    .theme-switcher span {
+      color: var(--text-dim);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .theme-switcher button {
+      padding: 0.75rem 1rem;
+      font-size: 1.5rem;
+      border: 1px solid color-mix(in oklch, var(--text) 15%, transparent);
+      background: var(--glass);
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all var(--dur-fast) var(--easing);
+      backdrop-filter: blur(10px);
+    }
+
+    .theme-switcher button:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px color-mix(in oklch, var(--primary) 20%, transparent);
+    }
+
+    .theme-switcher button:active {
+      transform: translateY(0);
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--text-dim);
+      font-weight: 300;
+    }
+
+    .presentations {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .card {
+      position: relative;
+      background: var(--glass);
+      border: 1px solid color-mix(in oklch, var(--text) 10%, transparent);
+      border-radius: 1rem;
+      padding: 2.5rem;
+      transition: all var(--dur) var(--easing);
+      cursor: pointer;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg,
+        color-mix(in oklch, var(--primary) 5%, transparent),
+        color-mix(in oklch, var(--secondary) 5%, transparent)
+      );
+      opacity: 0;
+      transition: opacity var(--dur) var(--easing);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--dur) var(--easing);
+    }
+
+    .card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: color-mix(in oklch, var(--primary) 30%, transparent);
+      box-shadow:
+        0 20px 40px color-mix(in oklch, var(--primary) 10%, transparent),
+        0 0 0 1px color-mix(in oklch, var(--primary) 20%, transparent);
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+      filter: drop-shadow(0 4px 8px color-mix(in oklch, var(--primary) 30%, transparent));
+    }
+
+    .card h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .card p {
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid color-mix(in oklch, var(--text) 10%, transparent);
+    }
+
+    .card-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .card-meta span::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid color-mix(in oklch, var(--text) 10%, transparent);
+    }
+
+    .author {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    .author a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color var(--dur-fast) var(--easing);
+    }
+
+    .author a:hover {
+      color: var(--secondary);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .presentations {
+        gap: 1.5rem;
+      }
+
+      .card {
+        padding: 2rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Lightning Talks</h1>
+      <p class="subtitle">Select a presentation to begin</p>
+    </header>
+
+    <div class="theme-switcher">
+      <span>Theme:</span>
+      <button onclick="switchTheme('dark')" title="Dark Theme">🌙</button>
+      <button onclick="switchTheme('light')" title="Light Theme">☀️</button>
+      <button onclick="switchTheme('cyberpunk')" title="Cyberpunk Theme">⚡</button>
+      <button onclick="switchTheme('ocean')" title="Ocean Theme">🌊</button>
+      <button onclick="switchTheme('forest')" title="Forest Theme">🌲</button>
+      <button onclick="switchTheme('sunset')" title="Sunset Theme">🌅</button>
+    </div>
+
+    <main class="presentations">
+      <a href="presentation.html?slides=prompt-optimization" class="card" style="text-decoration: none;">
+        <div class="card-content">
+          <span class="card-icon">🎯</span>
+          <h2>Prompt Optimization</h2>
+          <p>Teaching Your AI Agent the Art of Knowing Nothing (Sometimes). A practical framework for building AI agents that know when to admit uncertainty, escalate appropriately, and avoid the pitfalls of overconfidence.</p>
+          <div class="card-meta">
+            <span>15 slides</span>
+            <span>~20 min</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="presentation.html?slides=effective-use-of-agents" class="card" style="text-decoration: none;">
+        <div class="card-content">
+          <span class="card-icon">🤖</span>
+          <h2>Effective Use of Agents</h2>
+          <p>Building Autonomous Systems That Actually Work. Core principles, practical patterns, and real-world examples for designing AI agents with the right level of autonomy, observability, and human oversight.</p>
+          <div class="card-meta">
+            <span>15 slides</span>
+            <span>~20 min</span>
+          </div>
+        </div>
+      </a>
+    </main>
+
+    <footer>
+      <p class="author">
+        <strong>Srdjan Strbanovic</strong> · Transformational Technology Leader<br>
+        <a href="https://srdjan.github.io" target="_blank" rel="noopener">srdjan.github.io</a> ·
+        <a href="https://github.com/srdjan" target="_blank" rel="noopener">github.com/srdjan</a> ·
+        <a href="https://linkedin.com/in/ssrdjan" target="_blank" rel="noopener">linkedin.com/in/ssrdjan</a>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // Theme switcher logic
+    const themes = [
+      { name: "dark", file: "assets/themes/dark.css" },
+      { name: "light", file: "assets/themes/light.css" },
+      { name: "cyberpunk", file: "assets/themes/cyberpunk.css" },
+      { name: "ocean", file: "assets/themes/ocean.css" },
+      { name: "forest", file: "assets/themes/forest.css" },
+      { name: "sunset", file: "assets/themes/sunset.css" }
+    ];
+
+    function switchTheme(themeName) {
+      const existing = document.getElementById("active-theme");
+      if (existing) existing.remove();
+
+      const theme = themes.find(t => t.name === themeName);
+      if (!theme) return;
+
+      const link = document.createElement("link");
+      link.id = "active-theme";
+      link.rel = "stylesheet";
+      link.href = theme.file;
+      document.head.appendChild(link);
+
+      localStorage.setItem("preferred-theme", themeName);
+    }
+
+    // Load saved theme or default to dark
+    const saved = localStorage.getItem("preferred-theme");
+    if (saved && saved !== "dark") {
+      switchTheme(saved);
+    }
+  </script>
+</body>
+</html>
